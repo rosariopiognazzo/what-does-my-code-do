@@ -1,6 +1,6 @@
 {
   "modelVersion": 1,
-  "id": "snapshot:d93831e9330affff",
+  "id": "snapshot:c5463f801c86ff9b",
   "project": {
     "id": "project:wdmcd-todo-saas-example",
     "name": "wdmcd-todo-saas-example",
@@ -14,11 +14,11 @@
     ],
     "entrypoints": [],
     "scannedRef": "main",
-    "commit": "e3c9de816ac0c9cdda702a822e03eaa2ffda5c75",
+    "commit": "e29c5fb1fab256d46fb7090d60ecf35a2493976d",
     "purpose": "Manage team tasks, sessions, and delivery notifications."
   },
-  "scannedAt": "2026-07-31T19:39:08.389Z",
-  "contentHash": "d93831e9330affff2b8bc6b741b351cf1be458dde1bc74ef4b114251b89fb3ff",
+  "scannedAt": "2026-07-31T20:21:09.615Z",
+  "contentHash": "c5463f801c86ff9ba44bb91b96f5b23f6144720c689a4e2782bf36e99743c76e",
   "nodes": [
     {
       "id": "capability:auth",
@@ -302,7 +302,7 @@
       ],
       "confidence": "declared",
       "createdAt": "2026-07-31T19:30:43.060Z",
-      "updatedAt": "2026-07-31T19:39:08.389Z"
+      "updatedAt": "2026-07-31T20:21:09.615Z"
     },
     {
       "id": "route:src/app/api/auth/route.ts:GET:/api/auth",
