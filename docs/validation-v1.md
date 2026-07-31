@@ -56,6 +56,7 @@ Each issue has a focused regression test or a repeatable repository result.
 - The production UI was checked at desktop size and at `390x844`. The capability editor, component search, filtered graph, overview, and impact views had no horizontal overflow.
 - A capability can be renamed, described, associated with or removed from components, and confirmed through one explicit mutation that previews `.wdmcd/capabilities.yaml` as its destination.
 - Capability graphs render at most 60 connected, prioritized nodes; the complete scope remains available to search and edit.
+- The release tarball was installed into an isolated consumer. Its `wdmcd` binary reported version `0.1.0`, validated the fixture, served the bundled UI, and returned HTTP 200 from `/api/project`.
 
 ## Known limits
 
@@ -70,15 +71,15 @@ Each issue has a focused regression test or a repeatable repository result.
 For a clean clone of any test repository:
 
 ```powershell
-pnpm dev:cli -- --root C:\path\to\repository init
-pnpm dev:cli -- --root C:\path\to\repository --format json scan
-pnpm dev:cli -- --root C:\path\to\repository --format json scan
-pnpm dev:cli -- --root C:\path\to\repository --format json overview
-pnpm dev:cli -- --root C:\path\to\repository --format json validate
+pnpm wdmcd --root C:\path\to\repository init
+pnpm wdmcd --root C:\path\to\repository --format json scan
+pnpm wdmcd --root C:\path\to\repository --format json scan
+pnpm wdmcd --root C:\path\to\repository --format json overview
+pnpm wdmcd --root C:\path\to\repository --format json validate
 ```
 
 For impact analysis, check out and scan each ref once before running:
 
 ```powershell
-pnpm dev:cli -- --root C:\path\to\repository --format json impact main...feature/name
+pnpm wdmcd --root C:\path\to\repository --format json impact main...feature/name
 ```

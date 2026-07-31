@@ -6,7 +6,10 @@ coverage/
 .idea/
 .vscode/
 .wdmcd/cache/
-apps/web/dist/
-packages/cli/dist/
 tests/.tmp/
 .wdmcd-test-repositories/
+!packages/cli/dist/
+packages/cli/dist/*
+!packages/cli/dist/index.mjs
+!apps/web/dist/
+!apps/web/dist/**
