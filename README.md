@@ -1,4 +1,6 @@
-# What Does My Code Do?
+<p align="center">
+  <img src="wdmcd-logo.png" alt="Logo">
+</p>
 
 WDMCD builds a local, evidence-backed semantic map of a TypeScript or JavaScript project. The v1 focuses on capability-oriented navigation, traceable technical facts, Git impact analysis, and a lightweight local UI.
 
