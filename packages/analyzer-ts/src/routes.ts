@@ -143,12 +143,14 @@ function detectNestRoutes(sourceFile: ts.SourceFile, sourcePath: string): RouteF
     const prefix = firstStringArgument(decoratorCall(controller));
 
     for (const member of statement.members) {
-      const routeDecorator = decoratorsOf(member).find((decorator) =>
-        HTTP_METHODS.has(decoratorName(decorator) ?? ''),
-      );
+      const routeDecorator = decoratorsOf(member).find((decorator) => {
+        const name = decoratorName(decorator);
+        return name ? HTTP_METHODS.has(name.toUpperCase()) : false;
+      });
       if (!routeDecorator) continue;
-      const method = decoratorName(routeDecorator);
-      if (!method) continue;
+      const name = decoratorName(routeDecorator);
+      if (!name) continue;
+      const method = name.toUpperCase();
       const suffix = firstStringArgument(decoratorCall(routeDecorator));
       routes.push({
         method,

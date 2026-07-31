@@ -53,6 +53,10 @@ beforeEach(async () => {
     'src/server.ts',
     "import express from 'express';\nconst app = express();\napp.post('/billing', () => 'ok');\n",
   );
+  await source(
+    'src/billing/billing.controller.ts',
+    "import { Controller, Get } from '@nestjs/common';\n@Controller('billing')\nexport class BillingController {\n  @Get(':id')\n  getInvoice() { return 'ok'; }\n}\n",
+  );
 });
 
 afterEach(async () => {
@@ -64,15 +68,15 @@ describe('TypeScript analyzer', () => {
     const first = await analyzeTypescriptProject(root, DEFAULT_CONFIG);
     const second = await analyzeTypescriptProject(root, DEFAULT_CONFIG);
 
-    expect(first.cache).toEqual({ hit: false, files: 5 });
-    expect(second.cache).toEqual({ hit: true, files: 5 });
+    expect(first.cache).toEqual({ hit: false, files: 6 });
+    expect(second.cache).toEqual({ hit: true, files: 6 });
     expect(second.files).toEqual(first.files);
   });
 
   it('extracts imports, calls, tests, and supported route patterns', async () => {
     const analysis = await analyzeTypescriptProject(root, DEFAULT_CONFIG);
 
-    expect(analysis.files).toHaveLength(5);
+    expect(analysis.files).toHaveLength(6);
     expect(
       analysis.files.find((file) => file.path.endsWith('service.ts'))?.imports[0],
     ).toMatchObject({
@@ -93,6 +97,11 @@ describe('TypeScript analyzer', () => {
           framework: 'next-app',
         }),
         expect.objectContaining({ method: 'POST', routePath: '/billing', framework: 'express' }),
+        expect.objectContaining({
+          method: 'GET',
+          routePath: '/billing/:id',
+          framework: 'nest',
+        }),
       ]),
     );
   });

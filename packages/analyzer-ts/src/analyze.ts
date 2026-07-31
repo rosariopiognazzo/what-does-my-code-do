@@ -21,13 +21,15 @@ import ts from 'typescript';
 
 import { detectRoutes } from './routes.js';
 
+const ANALYZER_CACHE_VERSION = 2 as const;
+
 interface PackageJson {
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
 }
 
 interface AnalysisCache {
-  version: 1;
+  version: typeof ANALYZER_CACHE_VERSION;
   key: string;
   analysis: unknown;
 }
@@ -43,7 +45,7 @@ async function optionalText(filePath: string): Promise<string | undefined> {
 async function readAnalysisCache(filePath: string, key: string) {
   try {
     const cache = parseJsonText(await readFile(filePath, 'utf8')) as AnalysisCache;
-    if (cache.version !== 1 || cache.key !== key) return undefined;
+    if (cache.version !== ANALYZER_CACHE_VERSION || cache.key !== key) return undefined;
     const parsed = TechnicalAnalysisSchema.safeParse(cache.analysis);
     return parsed.success ? parsed.data : undefined;
   } catch {
@@ -58,7 +60,7 @@ async function writeAnalysisCache(filePath: string, key: string, analysis: unkno
     await mkdir(directory, { recursive: true });
     await writeFile(
       temporary,
-      `${JSON.stringify({ version: 1, key, analysis } satisfies AnalysisCache)}\n`,
+      `${JSON.stringify({ version: ANALYZER_CACHE_VERSION, key, analysis } satisfies AnalysisCache)}\n`,
       'utf8',
     );
     await rename(temporary, filePath);
@@ -328,7 +330,7 @@ export async function analyzeTypescriptProject(root: string, config: WdmcdConfig
   }
   const dependencies = await readDependencies(resolvedRoot);
   const cacheKey = contentHash({
-    version: 1,
+    version: ANALYZER_CACHE_VERSION,
     analyzer: ts.version,
     config,
     tsconfig: await optionalText(path.join(resolvedRoot, 'tsconfig.json')),
