@@ -1,4 +1,4 @@
-import type { ValidationResult } from '@wdmcd/core';
+import type { CapabilityDetail, OverviewView, ValidationResult } from '@wdmcd/core';
 import pc from 'picocolors';
 
 export type OutputFormat = 'text' | 'json';
@@ -80,5 +80,70 @@ export function renderScan(view: ScanView, format: OutputFormat): string {
       lines.push(`- ${view.diagnostics.length - 5} more; run wdmcd validate.`);
   }
   lines.push('', 'Next: wdmcd overview');
+  return lines.join('\n');
+}
+
+export function renderOverview(view: OverviewView, format: OutputFormat): string {
+  if (format === 'json') return JSON.stringify(view, null, 2);
+  const ref = view.project.scannedRef ?? 'working tree';
+  const commit = view.project.commit ? ` @ ${view.project.commit.slice(0, 12)}` : '';
+  const lines = [pc.bold(`Project: ${view.project.name}`), `Scanned ref: ${ref}${commit}`];
+  if (view.project.purpose) lines.push(`Purpose: ${view.project.purpose}`);
+  lines.push('', pc.bold('Capabilities'));
+  if (view.capabilities.length === 0) lines.push('- No capability was identified.');
+  for (const [index, capability] of view.capabilities.entries()) {
+    lines.push(
+      `${index + 1}. ${capability.name}  ${capability.confidence}  ${capability.components} components  ${capability.tests} tests`,
+    );
+  }
+  if (view.openQuestions.length > 0) {
+    lines.push('', pc.bold('Open questions'));
+    for (const question of view.openQuestions) lines.push(`- ${question.question}`);
+  }
+  const first = view.capabilities[0];
+  if (first)
+    lines.push('', 'Next', `- wdmcd capability "${first.name}"`, '- wdmcd impact main...feature');
+  return lines.join('\n');
+}
+
+function componentLines(view: CapabilityDetail): string[] {
+  const groups: Array<
+    [string, CapabilityDetail['components'][keyof CapabilityDetail['components']]]
+  > = [
+    ['Entry', view.components.entry],
+    ['Orchestration', view.components.orchestration],
+    ['Data', view.components.data],
+    ['Integrations', view.components.integrations],
+    ['Tests', view.components.tests],
+    ['Other', view.components.other],
+  ];
+  const lines: string[] = [];
+  for (const [label, nodes] of groups) {
+    if (nodes.length === 0) continue;
+    lines.push(`${label}: ${nodes.map((node) => node.name).join(', ')}`);
+  }
+  return lines;
+}
+
+export function renderCapability(view: CapabilityDetail, format: OutputFormat): string {
+  if (format === 'json') return JSON.stringify(view, null, 2);
+  const lines = [pc.bold(`Capability: ${view.name}`), `State: ${view.confidence}`];
+  if (view.description) lines.push(`Purpose: ${view.description}`);
+  if (view.rule) lines.push(`Why: ${view.rule}`);
+  if (view.flows.length > 0) {
+    lines.push('', pc.bold('Flow'));
+    for (const flow of view.flows) lines.push(flow.steps.join(' -> '));
+  }
+  lines.push('', pc.bold('Components'), ...componentLines(view));
+  lines.push('', pc.bold('Evidence'));
+  for (const item of view.evidence.slice(0, 12)) {
+    const location = item.path
+      ? `${item.path}${item.lineStart ? `:${item.lineStart}` : ''}`
+      : item.sourceType;
+    lines.push(`- ${location}  ${item.kind}${item.note ? `  ${item.note}` : ''}`);
+  }
+  if (view.needsReview.length > 0) {
+    lines.push('', pc.bold('Needs review'), ...view.needsReview.map((item) => `- ${item}`));
+  }
   return lines.join('\n');
 }

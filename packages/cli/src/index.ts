@@ -5,20 +5,32 @@ import {
   buildTechnicalSnapshot,
   discoverProject,
 } from '@wdmcd/analyzer-ts';
-import { errorMessage, WDMCD_VERSION, WdmcdError } from '@wdmcd/core';
+import {
+  buildCapabilityDetail,
+  buildOverview,
+  errorMessage,
+  WDMCD_VERSION,
+  WdmcdError,
+} from '@wdmcd/core';
 import { getRepositoryState } from '@wdmcd/impact';
 import {
   parseOutputFormat,
+  renderCapability,
   renderInit,
+  renderOverview,
   renderScan,
   renderValidation,
   type OutputFormat,
 } from '@wdmcd/renderers';
+import { applySemanticModel } from '@wdmcd/semantic-rules';
 import {
   initializeProject,
   persistSnapshot,
+  readCapabilities,
+  readChangeEvents,
   readConfig,
   readLatestSnapshot,
+  readOpenQuestions,
   validateProject,
 } from '@wdmcd/store';
 import { Command } from 'commander';
@@ -61,17 +73,25 @@ program
   .action(async () => {
     const { root, format } = options();
     const config = await readConfig(root);
-    const [project, repository, previous] = await Promise.all([
+    const [project, repository, previous, capabilities, questions] = await Promise.all([
       discoverProject(root, config),
       getRepositoryState(root),
       readLatestSnapshot(root),
+      readCapabilities(root),
+      readOpenQuestions(root),
     ]);
     project.scannedRef = repository.ref;
     project.commit = repository.commit;
     const analysis = await analyzeTypescriptProject(root, config);
-    const snapshot = buildTechnicalSnapshot({
+    const technicalSnapshot = buildTechnicalSnapshot({
       analysis,
       project,
+      ...(previous ? { previous } : {}),
+    });
+    const snapshot = applySemanticModel({
+      snapshot: technicalSnapshot,
+      capabilities,
+      questions,
       ...(previous ? { previous } : {}),
     });
     await persistSnapshot(root, snapshot);
@@ -93,6 +113,34 @@ program
         format,
       ),
     );
+  });
+
+program
+  .command('overview')
+  .description('Show the project through its capabilities and open questions.')
+  .action(async () => {
+    const { root, format } = options();
+    const [snapshot, questions] = await Promise.all([
+      readLatestSnapshot(root),
+      readOpenQuestions(root),
+    ]);
+    if (!snapshot)
+      throw new WdmcdError('SNAPSHOT_NOT_FOUND', 'No snapshot found. Run wdmcd scan first.');
+    console.log(renderOverview(buildOverview(snapshot, questions), format));
+  });
+
+program
+  .command('capability <name>')
+  .description('Show one capability, its flow, components, and evidence.')
+  .action(async (name: string) => {
+    const { root, format } = options();
+    const [snapshot, history] = await Promise.all([
+      readLatestSnapshot(root),
+      readChangeEvents(root),
+    ]);
+    if (!snapshot)
+      throw new WdmcdError('SNAPSHOT_NOT_FOUND', 'No snapshot found. Run wdmcd scan first.');
+    console.log(renderCapability(buildCapabilityDetail(snapshot, name, history), format));
   });
 
 program

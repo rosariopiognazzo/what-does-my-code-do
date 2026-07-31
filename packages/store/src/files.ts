@@ -4,6 +4,7 @@ import path from 'node:path';
 
 import {
   CapabilitiesFileSchema,
+  ChangeEventSchema,
   DEFAULT_CONFIG,
   GraphSnapshotSchema,
   OpenQuestionsFileSchema,
@@ -11,6 +12,7 @@ import {
   WdmcdConfigSchema,
   WdmcdError,
   type CapabilitiesFile,
+  type ChangeEvent,
   type GraphSnapshot,
   type OpenQuestionsFile,
   type WdmcdConfig,
@@ -141,4 +143,14 @@ export async function readLatestSnapshot(root: string): Promise<GraphSnapshot | 
 export async function writeLatestSnapshot(root: string, snapshot: GraphSnapshot): Promise<void> {
   const parsed = GraphSnapshotSchema.parse(snapshot);
   await writeFileAtomic(projectPaths(root).snapshot, `${JSON.stringify(parsed, null, 2)}\n`);
+}
+
+export async function readChangeEvents(root: string): Promise<ChangeEvent[]> {
+  const filePath = projectPaths(root).history;
+  if (!(await exists(filePath))) return [];
+  const content = await readFile(filePath, 'utf8');
+  return content
+    .split(/\r?\n/)
+    .filter((line) => line.trim())
+    .map((line) => ChangeEventSchema.parse(parseJsonText(line)));
 }
