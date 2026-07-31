@@ -7,6 +7,7 @@ import {
   DEFAULT_CONFIG,
   GraphSnapshotSchema,
   OpenQuestionsFileSchema,
+  parseJsonText,
   WdmcdConfigSchema,
   WdmcdError,
   type CapabilitiesFile,
@@ -30,6 +31,16 @@ async function exists(filePath: string): Promise<boolean> {
     return true;
   } catch {
     return false;
+  }
+}
+
+async function findGitMarker(root: string): Promise<string | undefined> {
+  let current = path.resolve(root);
+  while (true) {
+    if (await exists(path.join(current, '.git'))) return current;
+    const parent = path.dirname(current);
+    if (parent === current) return undefined;
+    current = parent;
   }
 }
 
@@ -65,13 +76,12 @@ async function writeIfMissing(
 export async function initializeProject(root: string): Promise<InitResult> {
   const paths = projectPaths(root);
   const packageJson = path.join(paths.root, 'package.json');
-  const gitMarker = path.join(paths.root, '.git');
 
   if (!(await exists(packageJson))) {
     throw new WdmcdError('PROJECT_NOT_FOUND', `No package.json found in ${paths.root}.`);
   }
-  if (!(await exists(gitMarker))) {
-    throw new WdmcdError('GIT_NOT_FOUND', `No Git repository found in ${paths.root}.`);
+  if (!(await findGitMarker(paths.root))) {
+    throw new WdmcdError('GIT_NOT_FOUND', `No Git repository contains ${paths.root}.`);
   }
 
   const sourceCandidates = ['src', 'app', 'pages', 'packages'];
@@ -108,7 +118,7 @@ export async function initializeProject(root: string): Promise<InitResult> {
 
 export async function readConfig(root: string): Promise<WdmcdConfig> {
   const content = await readFile(projectPaths(root).config, 'utf8');
-  return WdmcdConfigSchema.parse(JSON.parse(content) as unknown);
+  return WdmcdConfigSchema.parse(parseJsonText(content));
 }
 
 export async function readCapabilities(root: string): Promise<CapabilitiesFile> {
@@ -125,7 +135,7 @@ export async function readLatestSnapshot(root: string): Promise<GraphSnapshot | 
   const filePath = projectPaths(root).snapshot;
   if (!(await exists(filePath))) return undefined;
   const content = await readFile(filePath, 'utf8');
-  return GraphSnapshotSchema.parse(JSON.parse(content) as unknown);
+  return GraphSnapshotSchema.parse(parseJsonText(content));
 }
 
 export async function writeLatestSnapshot(root: string, snapshot: GraphSnapshot): Promise<void> {

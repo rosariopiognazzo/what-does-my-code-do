@@ -10,6 +10,7 @@ export default defineConfig({
   splitting: false,
   sourcemap: true,
   noExternal: [/^@wdmcd\//],
+  external: ['typescript'],
   banner: {
     js: "#!/usr/bin/env node\nimport { createRequire as __createRequire } from 'node:module'; const require = __createRequire(import.meta.url);",
   },

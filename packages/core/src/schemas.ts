@@ -204,3 +204,61 @@ export const ValidationResultSchema = z.object({
   issues: z.array(ValidationIssueSchema),
 });
 export type ValidationResult = z.infer<typeof ValidationResultSchema>;
+
+export const SymbolFactSchema = z.object({
+  name: z.string().min(1),
+  kind: z.enum(['class', 'function', 'interface', 'type', 'variable', 'enum', 'unknown']),
+  line: z.number().int().positive(),
+  exported: z.boolean(),
+});
+export type SymbolFact = z.infer<typeof SymbolFactSchema>;
+
+export const ImportFactSchema = z.object({
+  specifier: z.string().min(1),
+  names: z.array(z.string()),
+  line: z.number().int().positive(),
+  resolvedPath: z.string().min(1).optional(),
+});
+export type ImportFact = z.infer<typeof ImportFactSchema>;
+
+export const CallFactSchema = z.object({
+  callee: z.string().min(1),
+  line: z.number().int().positive(),
+  resolvedPath: z.string().min(1).optional(),
+});
+export type CallFact = z.infer<typeof CallFactSchema>;
+
+export const RouteFactSchema = z.object({
+  method: z.string().min(1),
+  routePath: z.string().min(1),
+  sourcePath: z.string().min(1),
+  framework: z.enum(['next-app', 'next-pages', 'express', 'nest']),
+  handler: z.string().min(1).optional(),
+  line: z.number().int().positive(),
+});
+export type RouteFact = z.infer<typeof RouteFactSchema>;
+
+export const SourceFileFactSchema = z.object({
+  path: z.string().min(1),
+  hash: z.string().min(1),
+  isTest: z.boolean(),
+  symbols: z.array(SymbolFactSchema),
+  imports: z.array(ImportFactSchema),
+  calls: z.array(CallFactSchema),
+  routes: z.array(RouteFactSchema),
+});
+export type SourceFileFact = z.infer<typeof SourceFileFactSchema>;
+
+export const DependencyFactSchema = z.object({
+  name: z.string().min(1),
+  version: z.string(),
+  development: z.boolean(),
+});
+export type DependencyFact = z.infer<typeof DependencyFactSchema>;
+
+export const TechnicalAnalysisSchema = z.object({
+  files: z.array(SourceFileFactSchema),
+  dependencies: z.array(DependencyFactSchema),
+  diagnostics: z.array(DiagnosticSchema),
+});
+export type TechnicalAnalysis = z.infer<typeof TechnicalAnalysisSchema>;

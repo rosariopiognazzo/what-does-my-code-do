@@ -6,6 +6,7 @@ import {
   ChangeEventSchema,
   GraphSnapshotSchema,
   OpenQuestionsFileSchema,
+  parseJsonText,
   ValidationResultSchema,
   WdmcdConfigSchema,
   type GraphSnapshot,
@@ -30,7 +31,7 @@ async function validateStructuredFile<T>(
 ): Promise<T | undefined> {
   try {
     const content = await readFile(filePath, 'utf8');
-    const raw = format === 'json' ? (JSON.parse(content) as unknown) : (parse(content) as unknown);
+    const raw = format === 'json' ? parseJsonText(content) : (parse(content) as unknown);
     const result = schema.safeParse(raw);
     if (result.success) return result.data;
 
@@ -118,7 +119,7 @@ async function validateHistory(filePath: string, issues: ValidationIssue[]): Pro
   for (const [index, line] of content.split(/\r?\n/).entries()) {
     if (!line.trim()) continue;
     try {
-      const result = ChangeEventSchema.safeParse(JSON.parse(line) as unknown);
+      const result = ChangeEventSchema.safeParse(parseJsonText(line));
       if (!result.success) {
         issues.push({
           level: 'error',

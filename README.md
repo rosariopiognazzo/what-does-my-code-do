@@ -26,6 +26,7 @@ Run the current CLI against a local Git repository:
 
 ```powershell
 pnpm dev:cli -- --root C:\path\to\project init
+pnpm dev:cli -- --root C:\path\to\project scan
 pnpm dev:cli -- --root C:\path\to\project validate
 ```
 
@@ -40,6 +41,8 @@ pnpm dev:cli -- --root C:\path\to\project validate
 ```
 
 The generated `.wdmcd/.gitignore` excludes only `cache/`; curated YAML and exported snapshots remain versionable. Add `--format json` to any command when a stable machine-readable response is needed.
+
+`scan` recognizes TypeScript and JavaScript modules, exported symbols, local imports, statically resolvable calls, test imports, and basic Next.js, Express, and NestJS routes. It writes the validated graph to both `.wdmcd/snapshots/latest.json` and the ignored `.wdmcd/cache/graph.sqlite` store. Unsupported or malformed files are reported as diagnostics without aborting the repository scan.
 
 The product is local-first. Repository contents are not sent to remote services.
 

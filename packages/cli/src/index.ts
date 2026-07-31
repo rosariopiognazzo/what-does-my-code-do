@@ -1,13 +1,26 @@
 import path from 'node:path';
 
+import {
+  analyzeTypescriptProject,
+  buildTechnicalSnapshot,
+  discoverProject,
+} from '@wdmcd/analyzer-ts';
 import { errorMessage, WDMCD_VERSION, WdmcdError } from '@wdmcd/core';
+import { getRepositoryState } from '@wdmcd/impact';
 import {
   parseOutputFormat,
   renderInit,
+  renderScan,
   renderValidation,
   type OutputFormat,
 } from '@wdmcd/renderers';
-import { initializeProject, validateProject } from '@wdmcd/store';
+import {
+  initializeProject,
+  persistSnapshot,
+  readConfig,
+  readLatestSnapshot,
+  validateProject,
+} from '@wdmcd/store';
 import { Command } from 'commander';
 import pc from 'picocolors';
 
@@ -40,6 +53,46 @@ program
     const { root, format } = options();
     const result = await initializeProject(root);
     console.log(renderInit(result, format));
+  });
+
+program
+  .command('scan')
+  .description('Analyze the current TypeScript or JavaScript working tree.')
+  .action(async () => {
+    const { root, format } = options();
+    const config = await readConfig(root);
+    const [project, repository, previous] = await Promise.all([
+      discoverProject(root, config),
+      getRepositoryState(root),
+      readLatestSnapshot(root),
+    ]);
+    project.scannedRef = repository.ref;
+    project.commit = repository.commit;
+    const analysis = await analyzeTypescriptProject(root, config);
+    const snapshot = buildTechnicalSnapshot({
+      analysis,
+      project,
+      ...(previous ? { previous } : {}),
+    });
+    await persistSnapshot(root, snapshot);
+    console.log(
+      renderScan(
+        {
+          project: project.name,
+          ref: repository.ref,
+          commit: repository.commit,
+          snapshotId: snapshot.id,
+          contentHash: snapshot.contentHash,
+          files: snapshot.stats.files,
+          nodes: snapshot.stats.nodes,
+          edges: snapshot.stats.edges,
+          routes: snapshot.nodes.filter((node) => node.kind === 'route').length,
+          tests: snapshot.stats.tests,
+          diagnostics: snapshot.diagnostics,
+        },
+        format,
+      ),
+    );
   });
 
 program
