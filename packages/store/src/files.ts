@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { access, mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
+import { access, appendFile, mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import {
@@ -153,4 +153,14 @@ export async function readChangeEvents(root: string): Promise<ChangeEvent[]> {
     .split(/\r?\n/)
     .filter((line) => line.trim())
     .map((line) => ChangeEventSchema.parse(parseJsonText(line)));
+}
+
+export async function appendChangeEvent(root: string, input: ChangeEvent): Promise<boolean> {
+  const event = ChangeEventSchema.parse(input);
+  const existing = await readChangeEvents(root);
+  if (existing.some((item) => item.id === event.id)) return false;
+  const filePath = projectPaths(root).history;
+  await mkdir(path.dirname(filePath), { recursive: true });
+  await appendFile(filePath, `${JSON.stringify(event)}\n`, 'utf8');
+  return true;
 }

@@ -175,6 +175,21 @@ export class GraphDatabase {
     return row ? GraphSnapshotSchema.parse(JSON.parse(row.model_json) as unknown) : undefined;
   }
 
+  snapshotForRef(ref: string, commit?: string): GraphSnapshot | undefined {
+    const row = this.#database
+      .prepare(
+        `
+        SELECT model_json
+        FROM snapshots
+        WHERE scanned_ref = ? OR (? IS NOT NULL AND commit_hash = ?)
+        ORDER BY scanned_at DESC
+        LIMIT 1
+      `,
+      )
+      .get(ref, commit ?? null, commit ?? null) as { model_json: string } | undefined;
+    return row ? GraphSnapshotSchema.parse(JSON.parse(row.model_json) as unknown) : undefined;
+  }
+
   saveChangeEvent(input: ChangeEvent): void {
     const event = ChangeEventSchema.parse(input);
     this.#database

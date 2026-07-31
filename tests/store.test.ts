@@ -4,9 +4,11 @@ import path from 'node:path';
 import type { GraphSnapshot } from '@wdmcd/core';
 import {
   GraphDatabase,
+  appendChangeEvent,
   initializeProject,
   projectPaths,
   readConfig,
+  readChangeEvents,
   validateProject,
 } from '@wdmcd/store';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -61,6 +63,27 @@ describe('project files', () => {
       file: projectPaths(temporaryRoot).config,
       path: 'version',
     });
+  });
+
+  it('appends change history once per deterministic event id', async () => {
+    await initializeProject(temporaryRoot);
+    const event = {
+      id: 'change:test',
+      occurredAt: '2026-01-01T00:00:00.000Z',
+      snapshotId: 'snapshot:test',
+      summary: 'Initial fixture model.',
+      capabilityIds: ['capability:test'],
+      addedNodeIds: ['capability:test'],
+      removedNodeIds: [],
+      changedNodeIds: [],
+      addedEdgeIds: [],
+      removedEdgeIds: [],
+      changedEdgeIds: [],
+    };
+
+    expect(await appendChangeEvent(temporaryRoot, event)).toBe(true);
+    expect(await appendChangeEvent(temporaryRoot, event)).toBe(false);
+    expect(await readChangeEvents(temporaryRoot)).toEqual([event]);
   });
 });
 

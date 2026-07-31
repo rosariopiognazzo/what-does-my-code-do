@@ -29,6 +29,7 @@ pnpm dev:cli -- --root C:\path\to\project init
 pnpm dev:cli -- --root C:\path\to\project scan
 pnpm dev:cli -- --root C:\path\to\project overview
 pnpm dev:cli -- --root C:\path\to\project capability "Billing"
+pnpm dev:cli -- --root C:\path\to\project impact main...feature/billing
 pnpm dev:cli -- --root C:\path\to\project validate
 ```
 
@@ -47,6 +48,8 @@ The generated `.wdmcd/.gitignore` excludes only `cache/`; curated YAML and expor
 `scan` recognizes TypeScript and JavaScript modules, exported symbols, local imports, statically resolvable calls, test imports, and basic Next.js, Express, and NestJS routes. It writes the validated graph to both `.wdmcd/snapshots/latest.json` and the ignored `.wdmcd/cache/graph.sqlite` store. Unsupported or malformed files are reported as diagnostics without aborting the repository scan.
 
 The semantic pass gives curated capabilities in `.wdmcd/capabilities.yaml` precedence, then proposes transparent domain-area capabilities with `inferred` evidence. `overview` is capability-first; `capability <name>` drills into roles, flows, source evidence, and review questions without requiring the user to inspect the whole file graph.
+
+Each semantic model change is appended to `.wdmcd/history/change-events.jsonl`. Impact analysis compares evidence-backed snapshots instead of guessing a graph from patch text: scan each ref once, then run `wdmcd impact base...head`. The report includes changed files and symbols, directly affected capabilities, evidence-backed downstream chains up to two hops, relation changes, linked tests, and review questions.
 
 The product is local-first. Repository contents are not sent to remote services.
 

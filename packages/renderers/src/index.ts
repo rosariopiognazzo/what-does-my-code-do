@@ -1,4 +1,4 @@
-import type { CapabilityDetail, OverviewView, ValidationResult } from '@wdmcd/core';
+import type { CapabilityDetail, ImpactReport, OverviewView, ValidationResult } from '@wdmcd/core';
 import pc from 'picocolors';
 
 export type OutputFormat = 'text' | 'json';
@@ -144,6 +144,34 @@ export function renderCapability(view: CapabilityDetail, format: OutputFormat): 
   }
   if (view.needsReview.length > 0) {
     lines.push('', pc.bold('Needs review'), ...view.needsReview.map((item) => `- ${item}`));
+  }
+  return lines.join('\n');
+}
+
+export function renderImpact(view: ImpactReport, format: OutputFormat): string {
+  if (format === 'json') return JSON.stringify(view, null, 2);
+  const lines = [
+    pc.bold(`Impact: ${view.range}`),
+    `${view.files.length} changed files, ${view.relations.added.length} added and ${view.relations.removed.length} removed relations`,
+  ];
+  lines.push('', pc.bold('Capability directly affected'));
+  if (view.direct.length === 0) lines.push('- None identified from the available evidence.');
+  for (const impact of view.direct) lines.push(`- ${impact.name}: ${impact.reason}`);
+  if (view.downstream.length > 0) {
+    lines.push('', pc.bold('Potential downstream impact'));
+    for (const impact of view.downstream) {
+      lines.push(`- ${impact.name}: ${impact.chain.join(' -> ')}`);
+    }
+  }
+  if (view.tests.length > 0) {
+    lines.push('', pc.bold('Linked tests'), ...view.tests.map((test) => `- ${test.name}`));
+  }
+  if (view.questions.length > 0) {
+    lines.push(
+      '',
+      pc.bold('Review questions'),
+      ...view.questions.map((question) => `- ${question}`),
+    );
   }
   return lines.join('\n');
 }

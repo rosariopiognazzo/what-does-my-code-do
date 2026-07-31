@@ -12,11 +12,19 @@ import {
   WDMCD_VERSION,
   WdmcdError,
 } from '@wdmcd/core';
-import { getRepositoryState } from '@wdmcd/impact';
+import {
+  buildImpactReport,
+  createChangeEvent,
+  getChangedFiles,
+  getRepositoryState,
+  parseGitRange,
+  resolveCommit,
+} from '@wdmcd/impact';
 import {
   parseOutputFormat,
   renderCapability,
   renderInit,
+  renderImpact,
   renderOverview,
   renderScan,
   renderValidation,
@@ -25,6 +33,7 @@ import {
 import { applySemanticModel } from '@wdmcd/semantic-rules';
 import {
   initializeProject,
+  GraphDatabase,
   persistSnapshot,
   readCapabilities,
   readChangeEvents,
@@ -94,7 +103,8 @@ program
       questions,
       ...(previous ? { previous } : {}),
     });
-    await persistSnapshot(root, snapshot);
+    const changeEvent = createChangeEvent(previous, snapshot);
+    await persistSnapshot(root, snapshot, changeEvent);
     console.log(
       renderScan(
         {
@@ -141,6 +151,55 @@ program
     if (!snapshot)
       throw new WdmcdError('SNAPSHOT_NOT_FOUND', 'No snapshot found. Run wdmcd scan first.');
     console.log(renderCapability(buildCapabilityDetail(snapshot, name, history), format));
+  });
+
+program
+  .command('impact <range>')
+  .description('Compare two scanned Git refs and explain architectural impact.')
+  .action(async (rangeValue: string) => {
+    const { root, format } = options();
+    const range = parseGitRange(rangeValue);
+    const [baseCommit, headCommit, files] = await Promise.all([
+      resolveCommit(root, range.base),
+      resolveCommit(root, range.head),
+      getChangedFiles(root, range),
+    ]);
+    const database = GraphDatabase.forProject(root);
+    let baseSnapshot;
+    let headSnapshot;
+    try {
+      baseSnapshot = database.snapshotForRef(range.base, baseCommit);
+      headSnapshot = database.snapshotForRef(range.head, headCommit);
+    } finally {
+      database.close();
+    }
+    const missing = [
+      ...(!baseSnapshot ? [`${range.base} @ ${baseCommit.slice(0, 12)}`] : []),
+      ...(!headSnapshot ? [`${range.head} @ ${headCommit.slice(0, 12)}`] : []),
+    ];
+    if (!baseSnapshot || !headSnapshot) {
+      throw new WdmcdError(
+        'SNAPSHOT_NOT_FOUND',
+        'Impact requires an evidence-backed snapshot for both refs.',
+        [
+          ...missing.map((ref) => `Missing: ${ref}`),
+          'Check out each missing ref and run wdmcd scan once.',
+        ],
+      );
+    }
+    console.log(
+      renderImpact(
+        buildImpactReport({
+          range: range.range,
+          baseRef: range.base,
+          headRef: range.head,
+          base: baseSnapshot,
+          head: headSnapshot,
+          files,
+        }),
+        format,
+      ),
+    );
   });
 
 program

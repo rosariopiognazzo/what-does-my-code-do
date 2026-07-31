@@ -185,8 +185,10 @@ export const ChangeEventSchema = z.object({
   capabilityIds: z.array(z.string().min(1)),
   addedNodeIds: z.array(z.string().min(1)),
   removedNodeIds: z.array(z.string().min(1)),
+  changedNodeIds: z.array(z.string().min(1)).default([]),
   addedEdgeIds: z.array(z.string().min(1)),
   removedEdgeIds: z.array(z.string().min(1)),
+  changedEdgeIds: z.array(z.string().min(1)).default([]),
 });
 export type ChangeEvent = z.infer<typeof ChangeEventSchema>;
 
@@ -262,3 +264,48 @@ export const TechnicalAnalysisSchema = z.object({
   diagnostics: z.array(DiagnosticSchema),
 });
 export type TechnicalAnalysis = z.infer<typeof TechnicalAnalysisSchema>;
+
+export const ChangedFileSchema = z.object({
+  status: z.enum(['added', 'modified', 'deleted', 'renamed']),
+  path: z.string().min(1),
+  oldPath: z.string().min(1).optional(),
+});
+export type ChangedFile = z.infer<typeof ChangedFileSchema>;
+
+export const GraphDifferenceSchema = z.object({
+  addedNodeIds: z.array(z.string()),
+  removedNodeIds: z.array(z.string()),
+  changedNodeIds: z.array(z.string()),
+  addedEdgeIds: z.array(z.string()),
+  removedEdgeIds: z.array(z.string()),
+  changedEdgeIds: z.array(z.string()),
+});
+export type GraphDifference = z.infer<typeof GraphDifferenceSchema>;
+
+export const ImpactCapabilitySchema = z.object({
+  capabilityId: z.string(),
+  name: z.string(),
+  componentIds: z.array(z.string()),
+  reason: z.string(),
+  chain: z.array(z.string()),
+  evidenceIds: z.array(z.string()),
+});
+export type ImpactCapability = z.infer<typeof ImpactCapabilitySchema>;
+
+export const ImpactReportSchema = z.object({
+  range: z.string(),
+  base: z.object({ ref: z.string(), commit: z.string(), snapshotId: z.string() }),
+  head: z.object({ ref: z.string(), commit: z.string(), snapshotId: z.string() }),
+  files: z.array(ChangedFileSchema),
+  symbols: z.array(z.object({ path: z.string(), names: z.array(z.string()) })),
+  direct: z.array(ImpactCapabilitySchema),
+  downstream: z.array(ImpactCapabilitySchema),
+  relations: z.object({
+    added: z.array(GraphEdgeSchema),
+    removed: z.array(GraphEdgeSchema),
+    changed: z.array(z.object({ before: GraphEdgeSchema, after: GraphEdgeSchema })),
+  }),
+  tests: z.array(GraphNodeSchema),
+  questions: z.array(z.string()),
+});
+export type ImpactReport = z.infer<typeof ImpactReportSchema>;
