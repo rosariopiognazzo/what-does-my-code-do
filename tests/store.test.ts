@@ -18,6 +18,7 @@ const temporaryRoot = path.resolve('tests/.tmp/store');
 async function createRepository(): Promise<void> {
   await mkdir(path.join(temporaryRoot, '.git'), { recursive: true });
   await mkdir(path.join(temporaryRoot, 'src'), { recursive: true });
+  await mkdir(path.join(temporaryRoot, 'apps'), { recursive: true });
   await writeFile(path.join(temporaryRoot, 'package.json'), '{"name":"fixture"}\n');
 }
 
@@ -39,7 +40,10 @@ describe('project files', () => {
       '.wdmcd/open-questions.yaml',
       '.wdmcd/.gitignore',
     ]);
-    expect(await readConfig(temporaryRoot)).toMatchObject({ version: 1, include: ['src'] });
+    expect(await readConfig(temporaryRoot)).toMatchObject({
+      version: 1,
+      include: ['src', 'apps'],
+    });
 
     const curated = 'capabilities:\n  - id: capability:billing\n    name: Billing\n';
     await writeFile(projectPaths(temporaryRoot).capabilities, curated);

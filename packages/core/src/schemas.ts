@@ -128,7 +128,7 @@ export type GraphSnapshot = z.infer<typeof GraphSnapshotSchema>;
 
 export const WdmcdConfigSchema = z.object({
   version: z.literal(1),
-  include: z.array(z.string().min(1)).default(['src', 'app', 'pages', 'packages']),
+  include: z.array(z.string().min(1)).default(['src', 'app', 'apps', 'pages', 'packages', 'libs']),
   exclude: z
     .array(z.string().min(1))
     .default(['node_modules', 'dist', 'build', '.next', 'coverage', '.wdmcd/cache']),

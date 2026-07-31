@@ -86,7 +86,7 @@ export async function initializeProject(root: string): Promise<InitResult> {
     throw new WdmcdError('GIT_NOT_FOUND', `No Git repository contains ${paths.root}.`);
   }
 
-  const sourceCandidates = ['src', 'app', 'pages', 'packages'];
+  const sourceCandidates = ['src', 'app', 'apps', 'pages', 'packages', 'libs'];
   const detectedSources: string[] = [];
   for (const candidate of sourceCandidates) {
     if (await exists(path.join(paths.root, candidate))) detectedSources.push(candidate);
