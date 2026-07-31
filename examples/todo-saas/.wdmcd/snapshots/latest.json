@@ -1,20 +1,24 @@
 {
   "modelVersion": 1,
-  "id": "snapshot:52e098ab45f8aba5",
+  "id": "snapshot:d93831e9330affff",
   "project": {
     "id": "project:wdmcd-todo-saas-example",
     "name": "wdmcd-todo-saas-example",
     "root": "C:\\Users\\rosar\\Desktop\\what-does-my-code-do\\wdmcd_v1\\examples\\todo-saas",
     "packageManager": "unknown",
-    "frameworks": ["Express"],
-    "sourceRoots": ["src"],
+    "frameworks": [
+      "Express"
+    ],
+    "sourceRoots": [
+      "src"
+    ],
     "entrypoints": [],
     "scannedRef": "main",
-    "commit": "64790667cba1fa177c26b2bcb8978d4b93de4526",
+    "commit": "e3c9de816ac0c9cdda702a822e03eaa2ffda5c75",
     "purpose": "Manage team tasks, sessions, and delivery notifications."
   },
-  "scannedAt": "2026-07-31T19:30:43.060Z",
-  "contentHash": "52e098ab45f8aba51101945e023566ca123279e6cac074a4c600d2e6939444fc",
+  "scannedAt": "2026-07-31T19:39:08.389Z",
+  "contentHash": "d93831e9330affff2b8bc6b741b351cf1be458dde1bc74ef4b114251b89fb3ff",
   "nodes": [
     {
       "id": "capability:auth",
@@ -77,7 +81,9 @@
       "id": "component:src/app/api/auth/route.ts",
       "kind": "component",
       "name": "GET",
-      "evidenceIds": ["evidence:file:fadb2aa7a474998d"],
+      "evidenceIds": [
+        "evidence:file:fadb2aa7a474998d"
+      ],
       "confidence": "observed",
       "createdAt": "2026-07-31T19:30:43.060Z",
       "updatedAt": "2026-07-31T19:30:43.060Z",
@@ -98,7 +104,9 @@
       "id": "component:src/app/api/todos/route.ts",
       "kind": "component",
       "name": "POST",
-      "evidenceIds": ["evidence:file:b55ae70455fbe18c"],
+      "evidenceIds": [
+        "evidence:file:b55ae70455fbe18c"
+      ],
       "confidence": "observed",
       "createdAt": "2026-07-31T19:30:43.060Z",
       "updatedAt": "2026-07-31T19:30:43.060Z",
@@ -119,7 +127,9 @@
       "id": "component:src/auth/session.ts",
       "kind": "component",
       "name": "session",
-      "evidenceIds": ["evidence:file:947e1ee9f63eea17"],
+      "evidenceIds": [
+        "evidence:file:947e1ee9f63eea17"
+      ],
       "confidence": "observed",
       "createdAt": "2026-07-31T19:30:43.060Z",
       "updatedAt": "2026-07-31T19:30:43.060Z",
@@ -146,7 +156,9 @@
       "id": "component:src/notifications/email-adapter.ts",
       "kind": "component",
       "name": "sendEmail",
-      "evidenceIds": ["evidence:file:88d2807f3ad11793"],
+      "evidenceIds": [
+        "evidence:file:88d2807f3ad11793"
+      ],
       "confidence": "observed",
       "createdAt": "2026-07-31T19:30:43.060Z",
       "updatedAt": "2026-07-31T19:30:43.060Z",
@@ -167,7 +179,9 @@
       "id": "component:src/notifications/service.ts",
       "kind": "component",
       "name": "notifyAssignment",
-      "evidenceIds": ["evidence:file:5fe72aeb19c5f3dd"],
+      "evidenceIds": [
+        "evidence:file:5fe72aeb19c5f3dd"
+      ],
       "confidence": "observed",
       "createdAt": "2026-07-31T19:30:43.060Z",
       "updatedAt": "2026-07-31T19:30:43.060Z",
@@ -188,7 +202,9 @@
       "id": "component:src/todos/repository.ts",
       "kind": "component",
       "name": "repository",
-      "evidenceIds": ["evidence:file:cba6e4f0c090a3c8"],
+      "evidenceIds": [
+        "evidence:file:cba6e4f0c090a3c8"
+      ],
       "confidence": "observed",
       "createdAt": "2026-07-31T19:30:43.060Z",
       "updatedAt": "2026-07-31T19:30:43.060Z",
@@ -221,7 +237,9 @@
       "id": "component:src/todos/service.ts",
       "kind": "component",
       "name": "createTodo",
-      "evidenceIds": ["evidence:file:95fa8a2c3abcd417"],
+      "evidenceIds": [
+        "evidence:file:95fa8a2c3abcd417"
+      ],
       "confidence": "observed",
       "createdAt": "2026-07-31T19:30:43.060Z",
       "updatedAt": "2026-07-31T19:30:43.060Z",
@@ -243,12 +261,16 @@
       "kind": "project",
       "name": "wdmcd-todo-saas-example",
       "description": "Manage team tasks, sessions, and delivery notifications.",
-      "evidenceIds": ["evidence:file:package-json"],
+      "evidenceIds": [
+        "evidence:file:package-json"
+      ],
       "confidence": "observed",
       "createdAt": "2026-07-31T19:30:43.060Z",
       "updatedAt": "2026-07-31T19:30:43.060Z",
       "metadata": {
-        "frameworks": ["Express"],
+        "frameworks": [
+          "Express"
+        ],
         "dependencies": [
           {
             "name": "express",
@@ -266,23 +288,29 @@
             "development": true
           }
         ],
-        "sourceRoots": ["src"]
+        "sourceRoots": [
+          "src"
+        ]
       }
     },
     {
       "id": "question:email-delivery",
       "kind": "open_question",
       "name": "Which provider delivers assignment emails in production?",
-      "evidenceIds": ["evidence:question:7caa7456a157be41"],
+      "evidenceIds": [
+        "evidence:question:7caa7456a157be41"
+      ],
       "confidence": "declared",
       "createdAt": "2026-07-31T19:30:43.060Z",
-      "updatedAt": "2026-07-31T19:30:43.060Z"
+      "updatedAt": "2026-07-31T19:39:08.389Z"
     },
     {
       "id": "route:src/app/api/auth/route.ts:GET:/api/auth",
       "kind": "route",
       "name": "GET /api/auth",
-      "evidenceIds": ["evidence:route:a0140e1ac42ea000"],
+      "evidenceIds": [
+        "evidence:route:a0140e1ac42ea000"
+      ],
       "confidence": "observed",
       "createdAt": "2026-07-31T19:30:43.060Z",
       "updatedAt": "2026-07-31T19:30:43.060Z",
@@ -296,7 +324,9 @@
       "id": "route:src/app/api/todos/route.ts:POST:/api/todos",
       "kind": "route",
       "name": "POST /api/todos",
-      "evidenceIds": ["evidence:route:774061b148667fba"],
+      "evidenceIds": [
+        "evidence:route:774061b148667fba"
+      ],
       "confidence": "observed",
       "createdAt": "2026-07-31T19:30:43.060Z",
       "updatedAt": "2026-07-31T19:30:43.060Z",
@@ -310,7 +340,9 @@
       "id": "test:src/auth/session.test.ts",
       "kind": "test",
       "name": "session.test",
-      "evidenceIds": ["evidence:file:4a5dcf6c9fd4fb5c"],
+      "evidenceIds": [
+        "evidence:file:4a5dcf6c9fd4fb5c"
+      ],
       "confidence": "observed",
       "createdAt": "2026-07-31T19:30:43.060Z",
       "updatedAt": "2026-07-31T19:30:43.060Z",
@@ -324,7 +356,9 @@
       "id": "test:src/notifications/service.test.ts",
       "kind": "test",
       "name": "service.test",
-      "evidenceIds": ["evidence:file:a6ed2af5e34c912d"],
+      "evidenceIds": [
+        "evidence:file:a6ed2af5e34c912d"
+      ],
       "confidence": "observed",
       "createdAt": "2026-07-31T19:30:43.060Z",
       "updatedAt": "2026-07-31T19:30:43.060Z",
@@ -338,7 +372,9 @@
       "id": "test:src/todos/service.test.ts",
       "kind": "test",
       "name": "service.test",
-      "evidenceIds": ["evidence:file:cef9d35d55b26194"],
+      "evidenceIds": [
+        "evidence:file:cef9d35d55b26194"
+      ],
       "confidence": "observed",
       "createdAt": "2026-07-31T19:30:43.060Z",
       "updatedAt": "2026-07-31T19:30:43.060Z",
@@ -355,7 +391,9 @@
       "kind": "calls",
       "from": "component:src/app/api/auth/route.ts",
       "to": "component:src/auth/session.ts",
-      "evidenceIds": ["evidence:call:96449c45d7d96baa"],
+      "evidenceIds": [
+        "evidence:call:96449c45d7d96baa"
+      ],
       "confidence": "observed"
     },
     {
@@ -363,7 +401,9 @@
       "kind": "calls",
       "from": "component:src/app/api/todos/route.ts",
       "to": "component:src/todos/service.ts",
-      "evidenceIds": ["evidence:call:5bcc1576f00f864d"],
+      "evidenceIds": [
+        "evidence:call:5bcc1576f00f864d"
+      ],
       "confidence": "observed"
     },
     {
@@ -371,7 +411,9 @@
       "kind": "calls",
       "from": "component:src/notifications/service.ts",
       "to": "component:src/notifications/email-adapter.ts",
-      "evidenceIds": ["evidence:call:99018a220794b156"],
+      "evidenceIds": [
+        "evidence:call:99018a220794b156"
+      ],
       "confidence": "observed"
     },
     {
@@ -379,7 +421,9 @@
       "kind": "calls",
       "from": "component:src/todos/service.ts",
       "to": "component:src/todos/repository.ts",
-      "evidenceIds": ["evidence:call:4a9490796dea194e"],
+      "evidenceIds": [
+        "evidence:call:4a9490796dea194e"
+      ],
       "confidence": "observed"
     },
     {
@@ -387,7 +431,9 @@
       "kind": "calls",
       "from": "test:src/auth/session.test.ts",
       "to": "component:src/auth/session.ts",
-      "evidenceIds": ["evidence:call:53a335ae99d4910f"],
+      "evidenceIds": [
+        "evidence:call:53a335ae99d4910f"
+      ],
       "confidence": "observed"
     },
     {
@@ -395,7 +441,9 @@
       "kind": "calls",
       "from": "test:src/notifications/service.test.ts",
       "to": "component:src/notifications/service.ts",
-      "evidenceIds": ["evidence:call:639df5236797dd70"],
+      "evidenceIds": [
+        "evidence:call:639df5236797dd70"
+      ],
       "confidence": "observed"
     },
     {
@@ -403,7 +451,9 @@
       "kind": "calls",
       "from": "test:src/todos/service.test.ts",
       "to": "component:src/todos/service.ts",
-      "evidenceIds": ["evidence:call:74b32b0088949402"],
+      "evidenceIds": [
+        "evidence:call:74b32b0088949402"
+      ],
       "confidence": "observed"
     },
     {
@@ -411,7 +461,9 @@
       "kind": "exposes",
       "from": "component:src/app/api/auth/route.ts",
       "to": "route:src/app/api/auth/route.ts:GET:/api/auth",
-      "evidenceIds": ["evidence:route:a0140e1ac42ea000"],
+      "evidenceIds": [
+        "evidence:route:a0140e1ac42ea000"
+      ],
       "confidence": "observed"
     },
     {
@@ -419,7 +471,9 @@
       "kind": "exposes",
       "from": "component:src/app/api/todos/route.ts",
       "to": "route:src/app/api/todos/route.ts:POST:/api/todos",
-      "evidenceIds": ["evidence:route:774061b148667fba"],
+      "evidenceIds": [
+        "evidence:route:774061b148667fba"
+      ],
       "confidence": "observed"
     },
     {
@@ -427,7 +481,9 @@
       "kind": "implements",
       "from": "capability:auth",
       "to": "component:src/app/api/auth/route.ts",
-      "evidenceIds": ["evidence:rule:directory-auth"],
+      "evidenceIds": [
+        "evidence:rule:directory-auth"
+      ],
       "confidence": "inferred"
     },
     {
@@ -435,7 +491,9 @@
       "kind": "implements",
       "from": "capability:auth",
       "to": "component:src/auth/session.ts",
-      "evidenceIds": ["evidence:rule:directory-auth"],
+      "evidenceIds": [
+        "evidence:rule:directory-auth"
+      ],
       "confidence": "inferred"
     },
     {
@@ -443,7 +501,9 @@
       "kind": "implements",
       "from": "capability:auth",
       "to": "route:src/app/api/auth/route.ts:GET:/api/auth",
-      "evidenceIds": ["evidence:rule:directory-auth"],
+      "evidenceIds": [
+        "evidence:rule:directory-auth"
+      ],
       "confidence": "inferred"
     },
     {
@@ -451,7 +511,9 @@
       "kind": "implements",
       "from": "capability:auth",
       "to": "test:src/auth/session.test.ts",
-      "evidenceIds": ["evidence:rule:directory-auth"],
+      "evidenceIds": [
+        "evidence:rule:directory-auth"
+      ],
       "confidence": "inferred"
     },
     {
@@ -459,7 +521,9 @@
       "kind": "implements",
       "from": "capability:notifications",
       "to": "component:src/notifications/email-adapter.ts",
-      "evidenceIds": ["evidence:rule:directory-notifications"],
+      "evidenceIds": [
+        "evidence:rule:directory-notifications"
+      ],
       "confidence": "inferred"
     },
     {
@@ -467,7 +531,9 @@
       "kind": "implements",
       "from": "capability:notifications",
       "to": "component:src/notifications/service.ts",
-      "evidenceIds": ["evidence:rule:directory-notifications"],
+      "evidenceIds": [
+        "evidence:rule:directory-notifications"
+      ],
       "confidence": "inferred"
     },
     {
@@ -475,7 +541,9 @@
       "kind": "implements",
       "from": "capability:notifications",
       "to": "test:src/notifications/service.test.ts",
-      "evidenceIds": ["evidence:rule:directory-notifications"],
+      "evidenceIds": [
+        "evidence:rule:directory-notifications"
+      ],
       "confidence": "inferred"
     },
     {
@@ -483,7 +551,9 @@
       "kind": "implements",
       "from": "capability:todos",
       "to": "component:src/app/api/todos/route.ts",
-      "evidenceIds": ["evidence:rule:directory-todos"],
+      "evidenceIds": [
+        "evidence:rule:directory-todos"
+      ],
       "confidence": "inferred"
     },
     {
@@ -491,7 +561,9 @@
       "kind": "implements",
       "from": "capability:todos",
       "to": "component:src/todos/repository.ts",
-      "evidenceIds": ["evidence:rule:directory-todos"],
+      "evidenceIds": [
+        "evidence:rule:directory-todos"
+      ],
       "confidence": "inferred"
     },
     {
@@ -499,7 +571,9 @@
       "kind": "implements",
       "from": "capability:todos",
       "to": "component:src/todos/service.ts",
-      "evidenceIds": ["evidence:rule:directory-todos"],
+      "evidenceIds": [
+        "evidence:rule:directory-todos"
+      ],
       "confidence": "inferred"
     },
     {
@@ -507,7 +581,9 @@
       "kind": "implements",
       "from": "capability:todos",
       "to": "route:src/app/api/todos/route.ts:POST:/api/todos",
-      "evidenceIds": ["evidence:rule:directory-todos"],
+      "evidenceIds": [
+        "evidence:rule:directory-todos"
+      ],
       "confidence": "inferred"
     },
     {
@@ -515,7 +591,9 @@
       "kind": "implements",
       "from": "capability:todos",
       "to": "test:src/todos/service.test.ts",
-      "evidenceIds": ["evidence:rule:directory-todos"],
+      "evidenceIds": [
+        "evidence:rule:directory-todos"
+      ],
       "confidence": "inferred"
     },
     {
@@ -523,7 +601,9 @@
       "kind": "imports",
       "from": "component:src/app/api/auth/route.ts",
       "to": "component:src/auth/session.ts",
-      "evidenceIds": ["evidence:import:21690c734fbf840e"],
+      "evidenceIds": [
+        "evidence:import:21690c734fbf840e"
+      ],
       "confidence": "observed"
     },
     {
@@ -531,7 +611,9 @@
       "kind": "imports",
       "from": "component:src/app/api/todos/route.ts",
       "to": "component:src/todos/service.ts",
-      "evidenceIds": ["evidence:import:7e9f0fed47a9e3c5"],
+      "evidenceIds": [
+        "evidence:import:7e9f0fed47a9e3c5"
+      ],
       "confidence": "observed"
     },
     {
@@ -539,7 +621,9 @@
       "kind": "imports",
       "from": "component:src/notifications/service.ts",
       "to": "component:src/notifications/email-adapter.ts",
-      "evidenceIds": ["evidence:import:fff5107da295acf6"],
+      "evidenceIds": [
+        "evidence:import:fff5107da295acf6"
+      ],
       "confidence": "observed"
     },
     {
@@ -547,7 +631,9 @@
       "kind": "imports",
       "from": "component:src/todos/service.ts",
       "to": "component:src/todos/repository.ts",
-      "evidenceIds": ["evidence:import:36fbf3d164854802"],
+      "evidenceIds": [
+        "evidence:import:36fbf3d164854802"
+      ],
       "confidence": "observed"
     },
     {
@@ -555,7 +641,9 @@
       "kind": "imports",
       "from": "test:src/auth/session.test.ts",
       "to": "component:src/auth/session.ts",
-      "evidenceIds": ["evidence:import:f3948498f0e8cb47"],
+      "evidenceIds": [
+        "evidence:import:f3948498f0e8cb47"
+      ],
       "confidence": "observed"
     },
     {
@@ -563,7 +651,9 @@
       "kind": "imports",
       "from": "test:src/notifications/service.test.ts",
       "to": "component:src/notifications/service.ts",
-      "evidenceIds": ["evidence:import:d6a945e656cb28be"],
+      "evidenceIds": [
+        "evidence:import:d6a945e656cb28be"
+      ],
       "confidence": "observed"
     },
     {
@@ -571,7 +661,9 @@
       "kind": "imports",
       "from": "test:src/todos/service.test.ts",
       "to": "component:src/todos/service.ts",
-      "evidenceIds": ["evidence:import:82c4253d0c93b2c6"],
+      "evidenceIds": [
+        "evidence:import:82c4253d0c93b2c6"
+      ],
       "confidence": "observed"
     },
     {
@@ -579,7 +671,9 @@
       "kind": "risks",
       "from": "capability:notifications",
       "to": "question:email-delivery",
-      "evidenceIds": ["evidence:question:7caa7456a157be41"],
+      "evidenceIds": [
+        "evidence:question:7caa7456a157be41"
+      ],
       "confidence": "declared"
     },
     {
@@ -587,7 +681,9 @@
       "kind": "tested_by",
       "from": "component:src/auth/session.ts",
       "to": "test:src/auth/session.test.ts",
-      "evidenceIds": ["evidence:import:f3948498f0e8cb47"],
+      "evidenceIds": [
+        "evidence:import:f3948498f0e8cb47"
+      ],
       "confidence": "observed"
     },
     {
@@ -595,7 +691,9 @@
       "kind": "tested_by",
       "from": "component:src/notifications/service.ts",
       "to": "test:src/notifications/service.test.ts",
-      "evidenceIds": ["evidence:import:d6a945e656cb28be"],
+      "evidenceIds": [
+        "evidence:import:d6a945e656cb28be"
+      ],
       "confidence": "observed"
     },
     {
@@ -603,7 +701,9 @@
       "kind": "tested_by",
       "from": "component:src/todos/service.ts",
       "to": "test:src/todos/service.test.ts",
-      "evidenceIds": ["evidence:import:82c4253d0c93b2c6"],
+      "evidenceIds": [
+        "evidence:import:82c4253d0c93b2c6"
+      ],
       "confidence": "observed"
     }
   ],

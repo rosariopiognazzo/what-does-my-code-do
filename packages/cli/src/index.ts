@@ -67,7 +67,7 @@ program
   .description('Analyze the current TypeScript or JavaScript working tree.')
   .action(async () => {
     const { root, format } = options();
-    const { snapshot } = await scanProject(root);
+    const { snapshot, cacheHit } = await scanProject(root);
     console.log(
       renderScan(
         {
@@ -81,6 +81,7 @@ program
           edges: snapshot.stats.edges,
           routes: snapshot.nodes.filter((node) => node.kind === 'route').length,
           tests: snapshot.stats.tests,
+          cacheHit,
           diagnostics: snapshot.diagnostics,
         },
         format,

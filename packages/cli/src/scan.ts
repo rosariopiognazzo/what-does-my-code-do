@@ -17,6 +17,7 @@ import {
 export interface ScanProjectResult {
   snapshot: GraphSnapshot;
   changeEvent?: ChangeEvent;
+  cacheHit: boolean;
 }
 
 export async function scanProject(root: string): Promise<ScanProjectResult> {
@@ -44,5 +45,5 @@ export async function scanProject(root: string): Promise<ScanProjectResult> {
   });
   const changeEvent = createChangeEvent(previous, snapshot);
   await persistSnapshot(root, snapshot, changeEvent);
-  return { snapshot, ...(changeEvent ? { changeEvent } : {}) };
+  return { snapshot, cacheHit: analysis.cache.hit, ...(changeEvent ? { changeEvent } : {}) };
 }

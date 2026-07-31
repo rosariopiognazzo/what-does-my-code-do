@@ -60,6 +60,15 @@ afterEach(async () => {
 });
 
 describe('TypeScript analyzer', () => {
+  it('reuses validated facts when source and configuration are unchanged', async () => {
+    const first = await analyzeTypescriptProject(root, DEFAULT_CONFIG);
+    const second = await analyzeTypescriptProject(root, DEFAULT_CONFIG);
+
+    expect(first.cache).toEqual({ hit: false, files: 5 });
+    expect(second.cache).toEqual({ hit: true, files: 5 });
+    expect(second.files).toEqual(first.files);
+  });
+
   it('extracts imports, calls, tests, and supported route patterns', async () => {
     const analysis = await analyzeTypescriptProject(root, DEFAULT_CONFIG);
 

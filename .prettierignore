@@ -3,4 +3,7 @@ dist
 coverage
 pnpm-lock.yaml
 *.sqlite
-
+**/.wdmcd/cache/**
+examples/**/.wdmcd/history/**
+examples/**/.wdmcd/snapshots/**
+.wdmcd-test-repositories/**

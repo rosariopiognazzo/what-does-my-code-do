@@ -1,8 +1,10 @@
-import { readFile } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
+import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import {
   TechnicalAnalysisSchema,
+  contentHash,
   normalizeProjectPath,
   parseJsonText,
   shortHash,
@@ -22,6 +24,47 @@ import { detectRoutes } from './routes.js';
 interface PackageJson {
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
+}
+
+interface AnalysisCache {
+  version: 1;
+  key: string;
+  analysis: unknown;
+}
+
+async function optionalText(filePath: string): Promise<string | undefined> {
+  try {
+    return await readFile(filePath, 'utf8');
+  } catch {
+    return undefined;
+  }
+}
+
+async function readAnalysisCache(filePath: string, key: string) {
+  try {
+    const cache = parseJsonText(await readFile(filePath, 'utf8')) as AnalysisCache;
+    if (cache.version !== 1 || cache.key !== key) return undefined;
+    const parsed = TechnicalAnalysisSchema.safeParse(cache.analysis);
+    return parsed.success ? parsed.data : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+async function writeAnalysisCache(filePath: string, key: string, analysis: unknown): Promise<void> {
+  const directory = path.dirname(filePath);
+  const temporary = path.join(directory, `.analysis.${randomUUID()}.tmp`);
+  try {
+    await mkdir(directory, { recursive: true });
+    await writeFile(
+      temporary,
+      `${JSON.stringify({ version: 1, key, analysis } satisfies AnalysisCache)}\n`,
+      'utf8',
+    );
+    await rename(temporary, filePath);
+  } finally {
+    await rm(temporary, { force: true });
+  }
 }
 
 function isInsideRoot(root: string, filePath: string): boolean {
@@ -270,6 +313,37 @@ export async function analyzeTypescriptProject(root: string, config: WdmcdConfig
   )
     .map(normalizeProjectPath)
     .sort();
+  const sources = new Map<string, string>();
+  for (const relativePath of relativeFiles) {
+    try {
+      sources.set(relativePath, await readFile(path.join(resolvedRoot, relativePath), 'utf8'));
+    } catch (error) {
+      diagnostics.push({
+        level: 'warning',
+        code: 'SOURCE_UNREADABLE',
+        message: error instanceof Error ? error.message : String(error),
+        path: relativePath,
+      });
+    }
+  }
+  const dependencies = await readDependencies(resolvedRoot);
+  const cacheKey = contentHash({
+    version: 1,
+    analyzer: ts.version,
+    config,
+    tsconfig: await optionalText(path.join(resolvedRoot, 'tsconfig.json')),
+    packageJson: await optionalText(path.join(resolvedRoot, 'package.json')),
+    files: [...sources.entries()].map(([filePath, source]) => [filePath, shortHash(source)]),
+  });
+  const cachePath = path.join(resolvedRoot, '.wdmcd', 'cache', 'analysis.json');
+  const cached = await readAnalysisCache(cachePath, cacheKey);
+  if (cached) {
+    return TechnicalAnalysisSchema.parse({
+      ...cached,
+      dependencies,
+      cache: { hit: true, files: cached.files.length },
+    });
+  }
   const selectedFiles = new Set(relativeFiles);
   const compilerOptions = readCompilerOptions(resolvedRoot, diagnostics);
   const absoluteFiles = relativeFiles.map((file) => path.join(resolvedRoot, file));
@@ -290,7 +364,8 @@ export async function analyzeTypescriptProject(root: string, config: WdmcdConfig
       continue;
     }
     try {
-      const source = await readFile(absolutePath, 'utf8');
+      const source = sources.get(relativePath);
+      if (source === undefined) continue;
       fileFacts.push({
         path: relativePath,
         hash: shortHash(source),
@@ -322,9 +397,16 @@ export async function analyzeTypescriptProject(root: string, config: WdmcdConfig
     });
   }
 
-  return TechnicalAnalysisSchema.parse({
+  const analysis = TechnicalAnalysisSchema.parse({
     files: fileFacts,
-    dependencies: await readDependencies(resolvedRoot),
+    dependencies,
     diagnostics,
+    cache: { hit: false, files: fileFacts.length },
   });
+  try {
+    await writeAnalysisCache(cachePath, cacheKey, analysis);
+  } catch {
+    // Cache failures never invalidate an otherwise valid scan.
+  }
+  return analysis;
 }

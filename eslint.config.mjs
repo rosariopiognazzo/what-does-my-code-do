@@ -5,7 +5,13 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['**/dist/**', '**/coverage/**', '**/node_modules/**', 'tests/.tmp/**'],
+    ignores: [
+      '**/dist/**',
+      '**/coverage/**',
+      '**/node_modules/**',
+      'tests/.tmp/**',
+      '.wdmcd-test-repositories/**',
+    ],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,

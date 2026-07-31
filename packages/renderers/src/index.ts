@@ -20,6 +20,7 @@ export interface ScanView {
   edges: number;
   routes: number;
   tests: number;
+  cacheHit?: boolean;
   diagnostics: Array<{
     level: 'warning' | 'error';
     code: string;
@@ -70,6 +71,7 @@ export function renderScan(view: ScanView, format: OutputFormat): string {
     `Ref: ${view.ref} @ ${view.commit.slice(0, 12)}`,
     `Model: ${view.files} files, ${view.nodes} nodes, ${view.edges} relations`,
     `Routes: ${view.routes}  Tests: ${view.tests}`,
+    `Analysis cache: ${view.cacheHit ? 'hit' : 'updated'}`,
   ];
   if (view.diagnostics.length > 0) {
     lines.push('', pc.yellow(`Diagnostics (${view.diagnostics.length})`));

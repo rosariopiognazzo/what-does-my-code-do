@@ -262,6 +262,10 @@ export const TechnicalAnalysisSchema = z.object({
   files: z.array(SourceFileFactSchema),
   dependencies: z.array(DependencyFactSchema),
   diagnostics: z.array(DiagnosticSchema),
+  cache: z.object({
+    hit: z.boolean(),
+    files: z.number().int().nonnegative(),
+  }),
 });
 export type TechnicalAnalysis = z.infer<typeof TechnicalAnalysisSchema>;
 

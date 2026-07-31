@@ -9,3 +9,4 @@ coverage/
 apps/web/dist/
 packages/cli/dist/
 tests/.tmp/
+.wdmcd-test-repositories/
