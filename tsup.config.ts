@@ -11,7 +11,7 @@ export default defineConfig({
   sourcemap: true,
   noExternal: [/^@wdmcd\//],
   banner: {
-    js: "#!/usr/bin/env node\nimport { createRequire } from 'node:module'; const require = createRequire(import.meta.url);",
+    js: "#!/usr/bin/env node\nimport { createRequire as __createRequire } from 'node:module'; const require = __createRequire(import.meta.url);",
   },
   outExtension: () => ({ js: '.mjs' }),
 });
