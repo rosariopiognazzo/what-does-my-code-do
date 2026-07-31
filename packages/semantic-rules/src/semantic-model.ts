@@ -37,6 +37,7 @@ const GENERIC_SEGMENTS = new Set([
   '__tests__',
 ]);
 const WORKSPACE_ROOTS = new Set(['apps', 'packages', 'libs']);
+const WORKSPACE_CONTAINERS = new Set(['features', 'modules']);
 
 export interface SemanticModelOptions {
   snapshot: GraphSnapshot;
@@ -48,6 +49,7 @@ export interface SemanticModelOptions {
 function domainKey(filePath: string): string {
   const segments = normalizeProjectPath(filePath).split('/').slice(0, -1);
   if (segments[0] && WORKSPACE_ROOTS.has(segments[0]) && segments[1]) {
+    if (WORKSPACE_CONTAINERS.has(segments[1]) && segments[2]) return slugify(segments[2]);
     return slugify(segments[1]);
   }
   const candidate = segments.find(

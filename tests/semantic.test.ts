@@ -135,6 +135,7 @@ describe('semantic capability model', () => {
   it('uses each workspace as a separate capability boundary', async () => {
     await source('apps/api/main.ts', "export const startApi = () => 'api';\n");
     await source('apps/dashboard/main.ts', "export const startDashboard = () => 'dashboard';\n");
+    await source('packages/modules/orders/service.ts', 'export const createOrder = () => null;\n');
 
     const snapshot = applySemanticModel({
       snapshot: await technicalSnapshot(),
@@ -143,7 +144,8 @@ describe('semantic capability model', () => {
     });
     const names = buildOverview(snapshot).capabilities.map((capability) => capability.name);
 
-    expect(names).toEqual(expect.arrayContaining(['Api', 'Dashboard']));
+    expect(names).toEqual(expect.arrayContaining(['Api', 'Dashboard', 'Orders']));
     expect(names).not.toContain('Apps');
+    expect(names).not.toContain('Modules');
   });
 });
