@@ -106,6 +106,20 @@ describe('TypeScript analyzer', () => {
     );
   });
 
+  it('reports malformed source without aborting the project scan', async () => {
+    await source('src/billing/broken.ts', 'export const broken = ;\n');
+
+    const analysis = await analyzeTypescriptProject(root, DEFAULT_CONFIG);
+
+    expect(analysis.files.some((file) => file.path === 'src/billing/service.ts')).toBe(true);
+    expect(analysis.diagnostics).toContainEqual(
+      expect.objectContaining({
+        code: 'TYPESCRIPT_SYNTAX',
+        path: 'src/billing/broken.ts',
+      }),
+    );
+  });
+
   it('builds stable graph identities and explicit test evidence', async () => {
     const analysis = await analyzeTypescriptProject(root, DEFAULT_CONFIG);
     const project = await discoverProject(root, DEFAULT_CONFIG);
