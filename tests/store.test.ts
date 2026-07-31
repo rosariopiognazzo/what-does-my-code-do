@@ -19,6 +19,8 @@ async function createRepository(): Promise<void> {
   await mkdir(path.join(temporaryRoot, '.git'), { recursive: true });
   await mkdir(path.join(temporaryRoot, 'src'), { recursive: true });
   await mkdir(path.join(temporaryRoot, 'apps'), { recursive: true });
+  await mkdir(path.join(temporaryRoot, 'lib'), { recursive: true });
+  await mkdir(path.join(temporaryRoot, 'components'), { recursive: true });
   await writeFile(path.join(temporaryRoot, 'package.json'), '{"name":"fixture"}\n');
 }
 
@@ -42,7 +44,7 @@ describe('project files', () => {
     ]);
     expect(await readConfig(temporaryRoot)).toMatchObject({
       version: 1,
-      include: ['src', 'apps'],
+      include: ['src', 'apps', 'lib', 'components'],
     });
 
     const curated = 'capabilities:\n  - id: capability:billing\n    name: Billing\n';
