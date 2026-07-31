@@ -15,7 +15,7 @@ export interface GitRange {
   head: string;
 }
 
-const REF_PATTERN = /^(?!-)(?!.*\.\.)[A-Za-z0-9_./@{}~^+]+$/;
+const REF_PATTERN = /^(?!-)(?!.*\.\.)[A-Za-z0-9_./@{}~^+-]+$/;
 
 export function parseGitRange(value: string): GitRange {
   const parts = value.split('...');

@@ -118,6 +118,7 @@ describe('change intelligence', () => {
       base: 'main',
       head: 'feature/invoices',
     });
+    expect(parseGitRange('main...feature/team-audit').head).toBe('feature/team-audit');
     expect(() => parseGitRange('main..feature')).toThrow(/base\.\.\.head/);
     expect(() => parseGitRange('--help...main')).toThrow(/Invalid Git ref/);
   });
