@@ -131,4 +131,19 @@ describe('semantic capability model', () => {
       }),
     );
   });
+
+  it('uses each workspace as a separate capability boundary', async () => {
+    await source('apps/api/main.ts', "export const startApi = () => 'api';\n");
+    await source('apps/dashboard/main.ts', "export const startDashboard = () => 'dashboard';\n");
+
+    const snapshot = applySemanticModel({
+      snapshot: await technicalSnapshot(),
+      capabilities: { capabilities: [] },
+      questions: { questions: [] },
+    });
+    const names = buildOverview(snapshot).capabilities.map((capability) => capability.name);
+
+    expect(names).toEqual(expect.arrayContaining(['Api', 'Dashboard']));
+    expect(names).not.toContain('Apps');
+  });
 });
