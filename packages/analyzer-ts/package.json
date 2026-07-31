@@ -1,0 +1,12 @@
+{
+  "name": "@wdmcd/analyzer-ts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@wdmcd/core": "workspace:*",
+    "fast-glob": "^3.3.3",
+    "typescript": "^5.9.0"
+  }
+}

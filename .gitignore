@@ -1,0 +1,11 @@
+node_modules/
+dist/
+coverage/
+*.log
+.DS_Store
+.idea/
+.vscode/
+.wdmcd/cache/
+apps/web/dist/
+packages/cli/dist/
+

@@ -1,0 +1,6 @@
+name: wdmcd
+channels:
+  - conda-forge
+dependencies:
+  - nodejs=22
+  - python=3.12

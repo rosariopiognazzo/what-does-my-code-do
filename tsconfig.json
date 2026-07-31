@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": false,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "types": ["node", "vitest/globals"],
+    "baseUrl": ".",
+    "paths": {
+      "@wdmcd/analyzer-ts": ["packages/analyzer-ts/src/index.ts"],
+      "@wdmcd/core": ["packages/core/src/index.ts"],
+      "@wdmcd/impact": ["packages/impact/src/index.ts"],
+      "@wdmcd/renderers": ["packages/renderers/src/index.ts"],
+      "@wdmcd/semantic-rules": ["packages/semantic-rules/src/index.ts"],
+      "@wdmcd/store": ["packages/store/src/index.ts"]
+    }
+  },
+  "include": ["apps/**/*.ts", "apps/**/*.tsx", "packages/**/*.ts", "tests/**/*.ts", "*.ts"]
+}

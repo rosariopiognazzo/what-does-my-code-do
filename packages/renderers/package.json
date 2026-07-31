@@ -1,0 +1,12 @@
+{
+  "name": "@wdmcd/renderers",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@wdmcd/core": "workspace:*",
+    "@wdmcd/impact": "workspace:*",
+    "picocolors": "^1.1.1"
+  }
+}

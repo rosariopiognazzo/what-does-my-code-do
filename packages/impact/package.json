@@ -1,0 +1,12 @@
+{
+  "name": "@wdmcd/impact",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@wdmcd/core": "workspace:*",
+    "@wdmcd/store": "workspace:*",
+    "simple-git": "^3.30.0"
+  }
+}

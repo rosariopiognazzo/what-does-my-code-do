@@ -1,0 +1,21 @@
+{
+  "name": "wdmcd",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "wdmcd": "./dist/index.mjs"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.19.0",
+    "@wdmcd/analyzer-ts": "workspace:*",
+    "@wdmcd/core": "workspace:*",
+    "@wdmcd/impact": "workspace:*",
+    "@wdmcd/renderers": "workspace:*",
+    "@wdmcd/semantic-rules": "workspace:*",
+    "@wdmcd/store": "workspace:*",
+    "commander": "^14.0.0",
+    "hono": "^4.10.0",
+    "open": "^11.0.0"
+  }
+}
