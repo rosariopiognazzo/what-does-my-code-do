@@ -1,4 +1,11 @@
-import type { CapabilityDetail, CapabilitySummary, ImpactReport, OverviewView } from '@wdmcd/core';
+import type {
+  CapabilityCorrection,
+  CapabilityDetail,
+  CapabilitySummary,
+  ComponentOption,
+  ImpactReport,
+  OverviewView,
+} from '@wdmcd/core';
 
 interface ApiErrorBody {
   message?: string;
@@ -20,14 +27,20 @@ export const api = {
   capabilities: () => request<CapabilitySummary[]>('/api/capabilities'),
   capability: (id: string) =>
     request<CapabilityDetail>(`/api/capabilities/${encodeURIComponent(id)}`),
+  components: (query: string) =>
+    request<ComponentOption[]>(`/api/components?query=${encodeURIComponent(query)}&limit=50`),
   impact: (base: string, head: string) =>
     request<ImpactReport>(
       `/api/impact?base=${encodeURIComponent(base)}&head=${encodeURIComponent(head)}`,
     ),
-  confirm: (id: string) =>
+  confirm: (id: string, correction: CapabilityCorrection = {}) =>
     request<{ file: string; rescanned: boolean }>(
       `/api/capabilities/${encodeURIComponent(id)}/confirm`,
-      { method: 'POST' },
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(correction),
+      },
     ),
 };
 

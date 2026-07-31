@@ -122,7 +122,8 @@ describe('semantic capability model', () => {
       'Auth',
     ]);
     expect(payments.confidence).toBe('confirmed');
-    expect(payments.relations.some((edge) => edge.kind === 'calls')).toBe(true);
+    expect(payments.components.data).toHaveLength(0);
+    expect(snapshot.edges.some((edge) => edge.kind === 'calls')).toBe(true);
     expect(snapshot.edges).toContainEqual(
       expect.objectContaining({
         kind: 'risks',

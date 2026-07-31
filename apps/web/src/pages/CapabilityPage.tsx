@@ -1,5 +1,15 @@
-import type { CapabilityDetail } from '@wdmcd/core';
-import { ArrowLeft, CheckCircle2, ExternalLink, GitCommitHorizontal, Network } from 'lucide-react';
+import type { CapabilityDetail, ComponentOption } from '@wdmcd/core';
+import {
+  ArrowLeft,
+  CheckCircle2,
+  ExternalLink,
+  GitCommitHorizontal,
+  Network,
+  Pencil,
+  Save,
+  Search,
+  X,
+} from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
@@ -13,6 +23,14 @@ export function CapabilityPage() {
   const [detail, setDetail] = useState<CapabilityDetail>();
   const [error, setError] = useState<string>();
   const [confirming, setConfirming] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [searching, setSearching] = useState(false);
+  const [draftName, setDraftName] = useState('');
+  const [draftDescription, setDraftDescription] = useState('');
+  const [componentQuery, setComponentQuery] = useState('');
+  const [componentResults, setComponentResults] = useState<ComponentOption[]>([]);
+  const [selectedComponents, setSelectedComponents] = useState<Set<string>>(new Set());
 
   const load = useCallback(() => {
     setError(undefined);
@@ -45,6 +63,63 @@ export function CapabilityPage() {
     (total, group) => total + group.length,
     0,
   );
+  const allComponents = Object.values(detail.components).flat();
+
+  const openEditor = () => {
+    setDraftName(detail.name);
+    setDraftDescription(detail.description ?? '');
+    setSelectedComponents(new Set(allComponents.map((component) => component.id)));
+    setComponentResults(
+      allComponents.slice(0, 50).map((component) => ({
+        id: component.id,
+        name: component.name,
+        kind: component.kind,
+        ...(typeof component.metadata?.path === 'string' ? { path: component.metadata.path } : {}),
+      })),
+    );
+    setComponentQuery('');
+    setEditing(true);
+  };
+
+  const searchComponents = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setSearching(true);
+    try {
+      setComponentResults(await api.components(componentQuery.trim()));
+    } catch (reason) {
+      setError(String(reason));
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  const toggleComponent = (componentId: string) => {
+    setSelectedComponents((current) => {
+      const next = new Set(current);
+      if (next.has(componentId)) next.delete(componentId);
+      else next.add(componentId);
+      return next;
+    });
+  };
+
+  const saveCorrection = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setSaving(true);
+    try {
+      await api.confirm(id, {
+        name: draftName.trim(),
+        description: draftDescription.trim(),
+        components: [...selectedComponents].sort(),
+      });
+      setEditing(false);
+      await load();
+    } catch (reason) {
+      setError(String(reason));
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <main className="page-shell detail-page">
       <Link className="back-link" to="/overview">
@@ -60,20 +135,123 @@ export function CapabilityPage() {
           {detail.description && <p>{detail.description}</p>}
           {detail.rule && <small>{detail.rule}</small>}
         </div>
-        <button
-          className="primary-button"
-          type="button"
-          onClick={confirm}
-          disabled={detail.confidence === 'confirmed' || confirming}
-        >
-          <CheckCircle2 size={17} aria-hidden="true" />
-          {detail.confidence === 'confirmed'
-            ? 'Confirmed'
-            : confirming
-              ? 'Confirming'
-              : 'Confirm scope'}
-        </button>
+        <div className="header-actions">
+          <button className="secondary-button" type="button" onClick={openEditor}>
+            <Pencil size={16} aria-hidden="true" />
+            Edit model
+          </button>
+          <button
+            className="primary-button"
+            type="button"
+            onClick={confirm}
+            disabled={detail.confidence === 'confirmed' || confirming}
+          >
+            <CheckCircle2 size={17} aria-hidden="true" />
+            {detail.confidence === 'confirmed'
+              ? 'Confirmed'
+              : confirming
+                ? 'Confirming'
+                : 'Confirm scope'}
+          </button>
+        </div>
       </section>
+
+      {editing && (
+        <form className="model-editor" onSubmit={saveCorrection}>
+          <div className="section-title-row">
+            <div>
+              <p className="context-label">Curated capability</p>
+              <h2>Edit model</h2>
+            </div>
+            <button
+              className="icon-button"
+              type="button"
+              onClick={() => setEditing(false)}
+              title="Close editor"
+              aria-label="Close editor"
+            >
+              <X size={17} aria-hidden="true" />
+            </button>
+          </div>
+          <div className="editor-fields">
+            <label>
+              <span>Name</span>
+              <input
+                value={draftName}
+                onChange={(event) => setDraftName(event.target.value)}
+                required
+                maxLength={120}
+              />
+            </label>
+            <label>
+              <span>Description</span>
+              <textarea
+                value={draftDescription}
+                onChange={(event) => setDraftDescription(event.target.value)}
+                maxLength={1000}
+                rows={3}
+              />
+            </label>
+          </div>
+          <div className="scope-editor">
+            <div className="scope-heading">
+              <div>
+                <strong>Component scope</strong>
+                <small>{selectedComponents.size} selected</small>
+              </div>
+              <div className="component-search">
+                <input
+                  value={componentQuery}
+                  onChange={(event) => setComponentQuery(event.target.value)}
+                  placeholder="Search name or path"
+                  aria-label="Search components"
+                />
+                <button
+                  className="icon-button"
+                  type="button"
+                  onClick={(event) => void searchComponents(event)}
+                  disabled={searching}
+                  title="Search components"
+                  aria-label="Search components"
+                >
+                  <Search size={17} aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+            <div className="scope-results">
+              {componentResults.map((component) => (
+                <label className="scope-row" key={component.id}>
+                  <input
+                    type="checkbox"
+                    checked={selectedComponents.has(component.id)}
+                    onChange={() => toggleComponent(component.id)}
+                  />
+                  <span>
+                    <strong>{component.name}</strong>
+                    <small>{component.path ?? component.kind}</small>
+                  </span>
+                </label>
+              ))}
+              {componentResults.length === 0 && (
+                <p className="empty-text">No matching components.</p>
+              )}
+            </div>
+          </div>
+          <div className="editor-actions">
+            <small>
+              Updates <code>.wdmcd/capabilities.yaml</code>
+            </small>
+            <button className="secondary-button" type="button" onClick={() => setEditing(false)}>
+              <X size={16} aria-hidden="true" />
+              Cancel
+            </button>
+            <button className="primary-button" type="submit" disabled={saving}>
+              <Save size={16} aria-hidden="true" />
+              {saving ? 'Saving' : 'Save and confirm'}
+            </button>
+          </div>
+        </form>
+      )}
 
       <div className="detail-summary-strip">
         <span>

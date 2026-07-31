@@ -26,6 +26,7 @@ beforeEach(async () => {
   await mkdir(path.join(root, '.git'), { recursive: true });
   await source('package.json', '{"name":"api-app","description":"Manage invoices."}');
   await source('src/billing/service.ts', 'export const createInvoice = () => true;\n');
+  await source('src/reporting/service.ts', 'export const createReport = () => true;\n');
   await source('web/index.html', '<div id="root">WDMCD test</div>');
   await source('web/assets/app.js', 'console.log("test");');
   await initializeProject(root);
@@ -92,6 +93,42 @@ describe('local HTTP API', () => {
           id: 'capability:billing',
           confidence: 'confirmed',
           components: ['component:src/billing/service.ts'],
+        },
+      ],
+    });
+  });
+
+  it('searches components and persists an explicit capability correction', async () => {
+    const app = createLocalApp({ root, assetsRoot: assets, rescan: async () => undefined });
+    const components = await app.request('/api/components?query=reporting');
+
+    expect(components.status).toBe(200);
+    expect(await components.json()).toEqual([
+      expect.objectContaining({
+        id: 'component:src/reporting/service.ts',
+        path: 'src/reporting/service.ts',
+      }),
+    ]);
+
+    const response = await app.request('/api/capabilities/capability%3Abilling/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        name: 'Invoice management',
+        description: 'Create invoices and reporting output.',
+        components: ['component:src/reporting/service.ts'],
+      }),
+    });
+
+    expect(response.status).toBe(200);
+    expect(await readCapabilities(root)).toMatchObject({
+      capabilities: [
+        {
+          id: 'capability:billing',
+          name: 'Invoice management',
+          description: 'Create invoices and reporting output.',
+          confidence: 'confirmed',
+          components: ['component:src/reporting/service.ts'],
         },
       ],
     });

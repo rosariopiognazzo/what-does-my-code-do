@@ -24,7 +24,8 @@ body {
 }
 
 button,
-input {
+input,
+textarea {
   font: inherit;
   letter-spacing: 0;
 }
@@ -300,6 +301,24 @@ h2 {
   height: 500px;
 }
 
+.graph-frame {
+  position: relative;
+}
+
+.graph-count {
+  position: absolute;
+  z-index: 5;
+  top: 10px;
+  right: 10px;
+  padding: 4px 7px;
+  border: 1px solid #cfd5d1;
+  border-radius: 3px;
+  background: rgb(250 251 249 / 94%);
+  color: #626a65;
+  font-size: 0.68rem;
+  font-weight: 680;
+}
+
 .react-flow__node {
   overflow: hidden;
   border-radius: 4px !important;
@@ -496,6 +515,193 @@ h2 {
   cursor: pointer;
   font-size: 0.8rem;
   font-weight: 700;
+}
+
+.header-actions,
+.editor-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+}
+
+.secondary-button,
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid #bfc6c1;
+  border-radius: 4px;
+  background: #fafbf9;
+  color: #343a36;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 680;
+}
+
+.secondary-button:hover,
+.icon-button:hover:not(:disabled) {
+  border-color: #7f8982;
+  background: #eef2ef;
+}
+
+.icon-button {
+  width: 38px;
+  padding: 0;
+}
+
+.icon-button:disabled {
+  color: #9ba19d;
+  cursor: default;
+}
+
+.model-editor {
+  padding: 26px 0 30px;
+  border-bottom: 1px solid #cfd5d1;
+}
+
+.editor-fields {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.75fr) minmax(280px, 1.25fr);
+  gap: 16px;
+}
+
+.editor-fields label {
+  display: grid;
+  gap: 6px;
+}
+
+.editor-fields label > span,
+.scope-heading strong {
+  color: #5f6862;
+  font-size: 0.7rem;
+  font-weight: 730;
+  text-transform: uppercase;
+}
+
+.editor-fields input,
+.editor-fields textarea,
+.component-search input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #bfc6c1;
+  border-radius: 4px;
+  outline: none;
+  background: #fff;
+  color: #171b18;
+}
+
+.editor-fields input:focus,
+.editor-fields textarea:focus,
+.component-search input:focus {
+  border-color: #2d7b5a;
+  box-shadow: 0 0 0 2px rgb(45 123 90 / 12%);
+}
+
+.editor-fields textarea {
+  resize: vertical;
+  line-height: 1.45;
+}
+
+.scope-editor {
+  margin-top: 18px;
+}
+
+.scope-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 8px;
+}
+
+.scope-heading > div:first-child {
+  display: grid;
+  gap: 4px;
+}
+
+.scope-heading small,
+.editor-actions > small {
+  color: #6d756f;
+  font-size: 0.72rem;
+}
+
+.component-search {
+  display: grid;
+  grid-template-columns: minmax(180px, 280px) 38px;
+  gap: 6px;
+}
+
+.component-search input {
+  height: 38px;
+}
+
+.scope-results {
+  max-height: 270px;
+  overflow: auto;
+  border: 1px solid #d6dbd7;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.scope-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-bottom: 1px solid #ecefec;
+  cursor: pointer;
+}
+
+.scope-row:last-child {
+  border-bottom: 0;
+}
+
+.scope-row:hover {
+  background: #f4f7f4;
+}
+
+.scope-row input {
+  accent-color: #1f6d4e;
+}
+
+.scope-row > span {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.scope-row strong,
+.scope-row small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scope-row strong {
+  font-size: 0.8rem;
+}
+
+.scope-row small {
+  color: #727a75;
+  font-size: 0.7rem;
+}
+
+.scope-results > .empty-text {
+  padding: 10px 12px;
+}
+
+.editor-actions {
+  margin-top: 14px;
+}
+
+.editor-actions > small {
+  margin-right: auto;
 }
 
 .primary-button:hover:not(:disabled) {
@@ -774,6 +980,10 @@ h2 {
     grid-template-columns: 1fr;
     gap: 0;
   }
+
+  .editor-fields {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 620px) {
@@ -844,7 +1054,36 @@ h2 {
     border-bottom: 0;
   }
 
-  .detail-header .primary-button {
+  .header-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+
+  .header-actions button {
+    width: 100%;
+  }
+
+  .scope-heading {
+    display: grid;
+    align-items: stretch;
+  }
+
+  .component-search {
+    grid-template-columns: minmax(0, 1fr) 38px;
+  }
+
+  .editor-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .editor-actions > small {
+    grid-column: 1 / -1;
+    margin-right: 0;
+  }
+
+  .editor-actions button {
     width: 100%;
   }
 

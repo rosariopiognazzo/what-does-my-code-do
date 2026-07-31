@@ -189,7 +189,9 @@ export function applySemanticModel(options: SemanticModelOptions): GraphSnapshot
     )?.[0];
     if (matchingKey) {
       consumedGroups.add(matchingKey);
-      for (const member of groups.get(matchingKey) ?? []) members.add(member);
+      if (curated.components.length === 0) {
+        for (const member of groups.get(matchingKey) ?? []) members.add(member);
+      }
     }
     const expandedMembers = expandMembers(members, edges);
     const curatedEvidence: Evidence = {

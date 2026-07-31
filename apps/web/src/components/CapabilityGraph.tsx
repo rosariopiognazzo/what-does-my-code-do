@@ -1,7 +1,45 @@
 import type { CapabilityDetail, GraphNode } from '@wdmcd/core';
 import { Background, Controls, MarkerType, ReactFlow, type Edge, type Node } from '@xyflow/react';
 
+const MAX_GRAPH_NODES = 60;
+
+function visibleMembers(detail: CapabilityDetail): Set<string> {
+  const groups = Object.values(detail.components);
+  const members = groups.flat();
+  const memberIds = new Set(members.map((member) => member.id));
+  const adjacent = new Map<string, string[]>();
+  for (const edge of detail.relations) {
+    if (!memberIds.has(edge.from) || !memberIds.has(edge.to)) continue;
+    adjacent.set(edge.from, [...(adjacent.get(edge.from) ?? []), edge.to]);
+    adjacent.set(edge.to, [...(adjacent.get(edge.to) ?? []), edge.from]);
+  }
+  const seeds = [
+    ...detail.components.entry,
+    ...detail.components.orchestration.slice(0, 12),
+    ...detail.components.data.slice(0, 6),
+    ...detail.components.integrations.slice(0, 6),
+  ];
+  if (seeds.length === 0) seeds.push(...members.slice(0, 12));
+
+  const selected = new Set<string>();
+  const queue = seeds.map((node) => node.id);
+  while (queue.length > 0 && selected.size < MAX_GRAPH_NODES) {
+    const current = queue.shift();
+    if (!current || selected.has(current)) continue;
+    selected.add(current);
+    for (const neighbor of adjacent.get(current) ?? []) {
+      if (!selected.has(neighbor)) queue.push(neighbor);
+    }
+  }
+  for (const member of members) {
+    if (selected.size >= MAX_GRAPH_NODES) break;
+    selected.add(member.id);
+  }
+  return selected;
+}
+
 function graphNodes(detail: CapabilityDetail): Node[] {
+  const visible = visibleMembers(detail);
   const groups: Array<[GraphNode[], number]> = [
     [detail.components.entry, 20],
     [detail.components.orchestration, 260],
@@ -13,7 +51,7 @@ function graphNodes(detail: CapabilityDetail): Node[] {
   const nodes: Node[] = [];
   const offsets = new Map<number, number>();
   for (const [items, x] of groups) {
-    for (const item of items) {
+    for (const item of items.filter((candidate) => visible.has(candidate.id))) {
       const index = offsets.get(x) ?? 0;
       offsets.set(x, index + 1);
       nodes.push({
@@ -33,7 +71,12 @@ function graphNodes(detail: CapabilityDetail): Node[] {
 }
 
 export function CapabilityGraph({ detail }: { detail: CapabilityDetail }) {
-  const nodeIds = new Set(graphNodes(detail).map((node) => node.id));
+  const nodes = graphNodes(detail);
+  const nodeIds = new Set(nodes.map((node) => node.id));
+  const totalNodes = Object.values(detail.components).reduce(
+    (total, group) => total + group.length,
+    0,
+  );
   const preferredRelations = detail.relations.filter((edge) => {
     if (edge.kind !== 'imports') return true;
     const strongerSameDirection = detail.relations.some(
@@ -60,19 +103,24 @@ export function CapabilityGraph({ detail }: { detail: CapabilityDetail }) {
     }));
 
   return (
-    <div className="graph-canvas capability-graph" aria-label={`${detail.name} component graph`}>
-      <ReactFlow
-        nodes={graphNodes(detail)}
-        edges={edges}
-        fitView
-        minZoom={0.45}
-        maxZoom={1.5}
-        nodesDraggable={false}
-        nodesConnectable={false}
-      >
-        <Background color="#d9ddd9" gap={18} size={1} />
-        <Controls showInteractive={false} />
-      </ReactFlow>
+    <div className="graph-frame">
+      <span className="graph-count">
+        {nodes.length} of {totalNodes} components
+      </span>
+      <div className="graph-canvas capability-graph" aria-label={`${detail.name} component graph`}>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          fitView
+          minZoom={0.45}
+          maxZoom={1.5}
+          nodesDraggable={false}
+          nodesConnectable={false}
+        >
+          <Background color="#d9ddd9" gap={18} size={1} />
+          <Controls showInteractive={false} />
+        </ReactFlow>
+      </div>
     </div>
   );
 }

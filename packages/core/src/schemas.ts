@@ -156,6 +156,15 @@ export const CuratedCapabilitySchema = z.object({
 });
 export type CuratedCapability = z.infer<typeof CuratedCapabilitySchema>;
 
+export const CapabilityCorrectionSchema = z
+  .object({
+    name: z.string().trim().min(1).max(120).optional(),
+    description: z.string().trim().max(1000).optional(),
+    components: z.array(z.string().min(1)).max(10_000).optional(),
+  })
+  .strict();
+export type CapabilityCorrection = z.infer<typeof CapabilityCorrectionSchema>;
+
 export const CapabilitiesFileSchema = z.object({
   capabilities: z.array(CuratedCapabilitySchema).default([]),
 });

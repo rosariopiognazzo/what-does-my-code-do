@@ -70,6 +70,14 @@ export const CapabilityDetailSchema = z.object({
 });
 export type CapabilityDetail = z.infer<typeof CapabilityDetailSchema>;
 
+export const ComponentOptionSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  kind: GraphNodeSchema.shape.kind,
+  path: z.string().optional(),
+});
+export type ComponentOption = z.infer<typeof ComponentOptionSchema>;
+
 function metadataArray(node: GraphNode | undefined, key: string): unknown[] {
   const value = node?.metadata?.[key];
   return Array.isArray(value) ? value : [];

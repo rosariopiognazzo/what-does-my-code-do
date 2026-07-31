@@ -4,7 +4,14 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { serve } from '@hono/node-server';
-import { buildCapabilityDetail, buildOverview, errorMessage, WdmcdError } from '@wdmcd/core';
+import {
+  buildCapabilityDetail,
+  buildOverview,
+  CapabilityCorrectionSchema,
+  ComponentOptionSchema,
+  errorMessage,
+  WdmcdError,
+} from '@wdmcd/core';
 import { loadImpactReport } from '@wdmcd/impact';
 import {
   confirmCapability,
@@ -70,6 +77,29 @@ export function createLocalApp(options: LocalAppOptions): Hono {
     return context.json(buildCapabilityDetail(snapshot, context.req.param('id'), history));
   });
 
+  app.get('/api/components', async (context) => {
+    const snapshot = await requireSnapshot(root);
+    const query = (context.req.query('query') ?? '').trim().toLowerCase();
+    const requestedLimit = Number.parseInt(context.req.query('limit') ?? '50', 10);
+    const limit = Number.isInteger(requestedLimit)
+      ? Math.min(Math.max(requestedLimit, 1), 100)
+      : 50;
+    const components = snapshot.nodes
+      .filter((node) => ['component', 'route', 'test', 'external_service'].includes(node.kind))
+      .map((node) => ({
+        id: node.id,
+        name: node.name,
+        kind: node.kind,
+        ...(typeof node.metadata?.path === 'string' ? { path: node.metadata.path } : {}),
+      }))
+      .filter((node) =>
+        query ? `${node.name} ${node.path ?? ''}`.toLowerCase().includes(query) : true,
+      )
+      .sort((left, right) => left.name.localeCompare(right.name) || left.id.localeCompare(right.id))
+      .slice(0, limit);
+    return context.json(ComponentOptionSchema.array().parse(components));
+  });
+
   app.get('/api/components/:id', async (context) => {
     const snapshot = await requireSnapshot(root);
     const id = context.req.param('id');
@@ -127,7 +157,9 @@ export function createLocalApp(options: LocalAppOptions): Hono {
 
   app.post('/api/capabilities/:id/confirm', async (context) => {
     const snapshot = await requireSnapshot(root);
-    const capability = await confirmCapability(root, snapshot, context.req.param('id'));
+    const body = await context.req.json().catch(() => ({}));
+    const correction = CapabilityCorrectionSchema.parse(body);
+    const capability = await confirmCapability(root, snapshot, context.req.param('id'), correction);
     if (options.rescan) await options.rescan();
     else await scanProject(root);
     return context.json({

@@ -12,6 +12,7 @@ import {
   WdmcdConfigSchema,
   WdmcdError,
   type CapabilitiesFile,
+  type CapabilityCorrection,
   type ChangeEvent,
   type GraphSnapshot,
   type OpenQuestionsFile,
@@ -137,6 +138,7 @@ export async function confirmCapability(
   root: string,
   snapshot: GraphSnapshot,
   capabilityId: string,
+  correction: CapabilityCorrection = {},
 ): Promise<CapabilitiesFile['capabilities'][number]> {
   const capability = snapshot.nodes.find(
     (node) => node.kind === 'capability' && node.id === capabilityId,
@@ -144,23 +146,42 @@ export async function confirmCapability(
   if (!capability)
     throw new WdmcdError('CAPABILITY_NOT_FOUND', `Capability not found: ${capabilityId}.`);
   const files = await readCapabilities(root);
-  const componentIds = snapshot.edges
+  const existing = files.capabilities.find((item) => item.id === capabilityId);
+  const inferredComponentIds = snapshot.edges
     .filter((edge) => edge.kind === 'implements' && edge.from === capabilityId)
     .map((edge) => edge.to)
     .sort();
+  const componentIds = [...new Set(correction.components ?? inferredComponentIds)].sort();
+  const validMemberIds = new Set(
+    snapshot.nodes
+      .filter((node) => ['component', 'route', 'test', 'external_service'].includes(node.kind))
+      .map((node) => node.id),
+  );
+  const invalidIds = componentIds.filter((id) => !validMemberIds.has(id));
+  if (invalidIds.length > 0) {
+    throw new WdmcdError(
+      'INVALID_CAPABILITY_SCOPE',
+      'Capability scope contains nodes that are not available in the current snapshot.',
+      invalidIds,
+    );
+  }
   const source = snapshot.evidence.find(
     (item) =>
       capability.evidenceIds.includes(item.id) && item.path && !item.path.startsWith('.wdmcd/'),
   );
+  const description = correction.description ?? existing?.description ?? capability.description;
+  const evidence = existing?.evidence.length
+    ? existing.evidence
+    : source?.path
+      ? [{ path: source.path, note: 'Capability confirmed in the local WDMCD interface.' }]
+      : [{ note: 'Capability confirmed in the local WDMCD interface.' }];
   const confirmed = {
     id: capability.id,
-    name: capability.name,
-    ...(capability.description ? { description: capability.description } : {}),
+    name: correction.name ?? existing?.name ?? capability.name,
+    ...(description ? { description } : {}),
     confidence: 'confirmed' as const,
     components: componentIds,
-    evidence: source?.path
-      ? [{ path: source.path, note: 'Capability confirmed in the local WDMCD interface.' }]
-      : [{ note: 'Capability confirmed in the local WDMCD interface.' }],
+    evidence,
   };
   const existingIndex = files.capabilities.findIndex((item) => item.id === capabilityId);
   if (existingIndex >= 0) files.capabilities[existingIndex] = confirmed;
