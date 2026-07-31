@@ -30,6 +30,8 @@ pnpm dev:cli -- --root C:\path\to\project scan
 pnpm dev:cli -- --root C:\path\to\project overview
 pnpm dev:cli -- --root C:\path\to\project capability "Billing"
 pnpm dev:cli -- --root C:\path\to\project impact main...feature/billing
+pnpm build
+pnpm dev:cli -- --root C:\path\to\project open
 pnpm dev:cli -- --root C:\path\to\project validate
 ```
 
@@ -50,6 +52,18 @@ The generated `.wdmcd/.gitignore` excludes only `cache/`; curated YAML and expor
 The semantic pass gives curated capabilities in `.wdmcd/capabilities.yaml` precedence, then proposes transparent domain-area capabilities with `inferred` evidence. `overview` is capability-first; `capability <name>` drills into roles, flows, source evidence, and review questions without requiring the user to inspect the whole file graph.
 
 Each semantic model change is appended to `.wdmcd/history/change-events.jsonl`. Impact analysis compares evidence-backed snapshots instead of guessing a graph from patch text: scan each ref once, then run `wdmcd impact base...head`. The report includes changed files and symbols, directly affected capabilities, evidence-backed downstream chains up to two hops, relation changes, linked tests, and review questions.
+
+`open` starts a read-mostly Hono API and the React interface on `127.0.0.1`; if port `4317` is occupied it selects the next available port. The web app consumes the same validated overview, capability, and impact view models as the CLI. Confirming a capability is the only mutating UI action: it updates `.wdmcd/capabilities.yaml` and immediately rescans the local model.
+
+## Controlled example
+
+`examples/todo-saas` is a small acceptance repository with Auth, Todos, and Notifications capabilities:
+
+```powershell
+pnpm dev:cli -- --root examples/todo-saas init
+pnpm dev:cli -- --root examples/todo-saas scan
+pnpm dev:cli -- --root examples/todo-saas overview
+```
 
 The product is local-first. Repository contents are not sent to remote services.
 

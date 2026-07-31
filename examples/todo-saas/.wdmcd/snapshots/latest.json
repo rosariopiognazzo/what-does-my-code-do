@@ -1,0 +1,868 @@
+{
+  "modelVersion": 1,
+  "id": "snapshot:52e098ab45f8aba5",
+  "project": {
+    "id": "project:wdmcd-todo-saas-example",
+    "name": "wdmcd-todo-saas-example",
+    "root": "C:\\Users\\rosar\\Desktop\\what-does-my-code-do\\wdmcd_v1\\examples\\todo-saas",
+    "packageManager": "unknown",
+    "frameworks": ["Express"],
+    "sourceRoots": ["src"],
+    "entrypoints": [],
+    "scannedRef": "main",
+    "commit": "64790667cba1fa177c26b2bcb8978d4b93de4526",
+    "purpose": "Manage team tasks, sessions, and delivery notifications."
+  },
+  "scannedAt": "2026-07-31T19:30:43.060Z",
+  "contentHash": "52e098ab45f8aba51101945e023566ca123279e6cac074a4c600d2e6939444fc",
+  "nodes": [
+    {
+      "id": "capability:auth",
+      "kind": "capability",
+      "name": "Auth",
+      "description": "Software behavior grouped around the Auth area.",
+      "evidenceIds": [
+        "evidence:rule:directory-auth",
+        "evidence:file:fadb2aa7a474998d",
+        "evidence:file:947e1ee9f63eea17",
+        "evidence:route:a0140e1ac42ea000"
+      ],
+      "confidence": "inferred",
+      "createdAt": "2026-07-31T19:30:43.060Z",
+      "updatedAt": "2026-07-31T19:30:43.060Z",
+      "metadata": {
+        "rule": "Inferred from the auth source area and its connected routes/tests.",
+        "domainKey": "auth"
+      }
+    },
+    {
+      "id": "capability:notifications",
+      "kind": "capability",
+      "name": "Notifications",
+      "description": "Software behavior grouped around the Notifications area.",
+      "evidenceIds": [
+        "evidence:rule:directory-notifications",
+        "evidence:file:88d2807f3ad11793",
+        "evidence:file:5fe72aeb19c5f3dd",
+        "evidence:file:a6ed2af5e34c912d"
+      ],
+      "confidence": "inferred",
+      "createdAt": "2026-07-31T19:30:43.060Z",
+      "updatedAt": "2026-07-31T19:30:43.060Z",
+      "metadata": {
+        "rule": "Inferred from the notifications source area and its connected routes/tests.",
+        "domainKey": "notifications"
+      }
+    },
+    {
+      "id": "capability:todos",
+      "kind": "capability",
+      "name": "Todos",
+      "description": "Software behavior grouped around the Todos area.",
+      "evidenceIds": [
+        "evidence:rule:directory-todos",
+        "evidence:file:b55ae70455fbe18c",
+        "evidence:file:cba6e4f0c090a3c8",
+        "evidence:file:95fa8a2c3abcd417"
+      ],
+      "confidence": "inferred",
+      "createdAt": "2026-07-31T19:30:43.060Z",
+      "updatedAt": "2026-07-31T19:30:43.060Z",
+      "metadata": {
+        "rule": "Inferred from the todos source area and its connected routes/tests.",
+        "domainKey": "todos"
+      }
+    },
+    {
+      "id": "component:src/app/api/auth/route.ts",
+      "kind": "component",
+      "name": "GET",
+      "evidenceIds": ["evidence:file:fadb2aa7a474998d"],
+      "confidence": "observed",
+      "createdAt": "2026-07-31T19:30:43.060Z",
+      "updatedAt": "2026-07-31T19:30:43.060Z",
+      "metadata": {
+        "path": "src/app/api/auth/route.ts",
+        "hash": "2991adf62a41911a",
+        "symbols": [
+          {
+            "name": "GET",
+            "kind": "function",
+            "line": 3,
+            "exported": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "component:src/app/api/todos/route.ts",
+      "kind": "component",
+      "name": "POST",
+      "evidenceIds": ["evidence:file:b55ae70455fbe18c"],
+      "confidence": "observed",
+      "createdAt": "2026-07-31T19:30:43.060Z",
+      "updatedAt": "2026-07-31T19:30:43.060Z",
+      "metadata": {
+        "path": "src/app/api/todos/route.ts",
+        "hash": "53f8fbf4b53d81c0",
+        "symbols": [
+          {
+            "name": "POST",
+            "kind": "function",
+            "line": 3,
+            "exported": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "component:src/auth/session.ts",
+      "kind": "component",
+      "name": "session",
+      "evidenceIds": ["evidence:file:947e1ee9f63eea17"],
+      "confidence": "observed",
+      "createdAt": "2026-07-31T19:30:43.060Z",
+      "updatedAt": "2026-07-31T19:30:43.060Z",
+      "metadata": {
+        "path": "src/auth/session.ts",
+        "hash": "60d2dafc28f0595e",
+        "symbols": [
+          {
+            "name": "Session",
+            "kind": "interface",
+            "line": 1,
+            "exported": true
+          },
+          {
+            "name": "loadSession",
+            "kind": "function",
+            "line": 5,
+            "exported": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "component:src/notifications/email-adapter.ts",
+      "kind": "component",
+      "name": "sendEmail",
+      "evidenceIds": ["evidence:file:88d2807f3ad11793"],
+      "confidence": "observed",
+      "createdAt": "2026-07-31T19:30:43.060Z",
+      "updatedAt": "2026-07-31T19:30:43.060Z",
+      "metadata": {
+        "path": "src/notifications/email-adapter.ts",
+        "hash": "0cb262f92d3febf2",
+        "symbols": [
+          {
+            "name": "sendEmail",
+            "kind": "function",
+            "line": 1,
+            "exported": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "component:src/notifications/service.ts",
+      "kind": "component",
+      "name": "notifyAssignment",
+      "evidenceIds": ["evidence:file:5fe72aeb19c5f3dd"],
+      "confidence": "observed",
+      "createdAt": "2026-07-31T19:30:43.060Z",
+      "updatedAt": "2026-07-31T19:30:43.060Z",
+      "metadata": {
+        "path": "src/notifications/service.ts",
+        "hash": "f50726cb9f80a918",
+        "symbols": [
+          {
+            "name": "notifyAssignment",
+            "kind": "function",
+            "line": 3,
+            "exported": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "component:src/todos/repository.ts",
+      "kind": "component",
+      "name": "repository",
+      "evidenceIds": ["evidence:file:cba6e4f0c090a3c8"],
+      "confidence": "observed",
+      "createdAt": "2026-07-31T19:30:43.060Z",
+      "updatedAt": "2026-07-31T19:30:43.060Z",
+      "metadata": {
+        "path": "src/todos/repository.ts",
+        "hash": "5668f740415930dd",
+        "symbols": [
+          {
+            "name": "Todo",
+            "kind": "interface",
+            "line": 1,
+            "exported": true
+          },
+          {
+            "name": "todos",
+            "kind": "variable",
+            "line": 6,
+            "exported": false
+          },
+          {
+            "name": "saveTodo",
+            "kind": "function",
+            "line": 8,
+            "exported": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "component:src/todos/service.ts",
+      "kind": "component",
+      "name": "createTodo",
+      "evidenceIds": ["evidence:file:95fa8a2c3abcd417"],
+      "confidence": "observed",
+      "createdAt": "2026-07-31T19:30:43.060Z",
+      "updatedAt": "2026-07-31T19:30:43.060Z",
+      "metadata": {
+        "path": "src/todos/service.ts",
+        "hash": "f18f796b0d37a43a",
+        "symbols": [
+          {
+            "name": "createTodo",
+            "kind": "function",
+            "line": 3,
+            "exported": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "project:wdmcd-todo-saas-example",
+      "kind": "project",
+      "name": "wdmcd-todo-saas-example",
+      "description": "Manage team tasks, sessions, and delivery notifications.",
+      "evidenceIds": ["evidence:file:package-json"],
+      "confidence": "observed",
+      "createdAt": "2026-07-31T19:30:43.060Z",
+      "updatedAt": "2026-07-31T19:30:43.060Z",
+      "metadata": {
+        "frameworks": ["Express"],
+        "dependencies": [
+          {
+            "name": "express",
+            "version": "^5.1.0",
+            "development": false
+          },
+          {
+            "name": "typescript",
+            "version": "^5.9.0",
+            "development": true
+          },
+          {
+            "name": "vitest",
+            "version": "^4.0.0",
+            "development": true
+          }
+        ],
+        "sourceRoots": ["src"]
+      }
+    },
+    {
+      "id": "question:email-delivery",
+      "kind": "open_question",
+      "name": "Which provider delivers assignment emails in production?",
+      "evidenceIds": ["evidence:question:7caa7456a157be41"],
+      "confidence": "declared",
+      "createdAt": "2026-07-31T19:30:43.060Z",
+      "updatedAt": "2026-07-31T19:30:43.060Z"
+    },
+    {
+      "id": "route:src/app/api/auth/route.ts:GET:/api/auth",
+      "kind": "route",
+      "name": "GET /api/auth",
+      "evidenceIds": ["evidence:route:a0140e1ac42ea000"],
+      "confidence": "observed",
+      "createdAt": "2026-07-31T19:30:43.060Z",
+      "updatedAt": "2026-07-31T19:30:43.060Z",
+      "metadata": {
+        "method": "GET",
+        "path": "/api/auth",
+        "framework": "next-app"
+      }
+    },
+    {
+      "id": "route:src/app/api/todos/route.ts:POST:/api/todos",
+      "kind": "route",
+      "name": "POST /api/todos",
+      "evidenceIds": ["evidence:route:774061b148667fba"],
+      "confidence": "observed",
+      "createdAt": "2026-07-31T19:30:43.060Z",
+      "updatedAt": "2026-07-31T19:30:43.060Z",
+      "metadata": {
+        "method": "POST",
+        "path": "/api/todos",
+        "framework": "next-app"
+      }
+    },
+    {
+      "id": "test:src/auth/session.test.ts",
+      "kind": "test",
+      "name": "session.test",
+      "evidenceIds": ["evidence:file:4a5dcf6c9fd4fb5c"],
+      "confidence": "observed",
+      "createdAt": "2026-07-31T19:30:43.060Z",
+      "updatedAt": "2026-07-31T19:30:43.060Z",
+      "metadata": {
+        "path": "src/auth/session.test.ts",
+        "hash": "5040116f70736c12",
+        "symbols": []
+      }
+    },
+    {
+      "id": "test:src/notifications/service.test.ts",
+      "kind": "test",
+      "name": "service.test",
+      "evidenceIds": ["evidence:file:a6ed2af5e34c912d"],
+      "confidence": "observed",
+      "createdAt": "2026-07-31T19:30:43.060Z",
+      "updatedAt": "2026-07-31T19:30:43.060Z",
+      "metadata": {
+        "path": "src/notifications/service.test.ts",
+        "hash": "f00a853f0e8ca797",
+        "symbols": []
+      }
+    },
+    {
+      "id": "test:src/todos/service.test.ts",
+      "kind": "test",
+      "name": "service.test",
+      "evidenceIds": ["evidence:file:cef9d35d55b26194"],
+      "confidence": "observed",
+      "createdAt": "2026-07-31T19:30:43.060Z",
+      "updatedAt": "2026-07-31T19:30:43.060Z",
+      "metadata": {
+        "path": "src/todos/service.test.ts",
+        "hash": "314dcc94b705b406",
+        "symbols": []
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "calls:component:src/app/api/auth/route.ts->component:src/auth/session.ts",
+      "kind": "calls",
+      "from": "component:src/app/api/auth/route.ts",
+      "to": "component:src/auth/session.ts",
+      "evidenceIds": ["evidence:call:96449c45d7d96baa"],
+      "confidence": "observed"
+    },
+    {
+      "id": "calls:component:src/app/api/todos/route.ts->component:src/todos/service.ts",
+      "kind": "calls",
+      "from": "component:src/app/api/todos/route.ts",
+      "to": "component:src/todos/service.ts",
+      "evidenceIds": ["evidence:call:5bcc1576f00f864d"],
+      "confidence": "observed"
+    },
+    {
+      "id": "calls:component:src/notifications/service.ts->component:src/notifications/email-adapter.ts",
+      "kind": "calls",
+      "from": "component:src/notifications/service.ts",
+      "to": "component:src/notifications/email-adapter.ts",
+      "evidenceIds": ["evidence:call:99018a220794b156"],
+      "confidence": "observed"
+    },
+    {
+      "id": "calls:component:src/todos/service.ts->component:src/todos/repository.ts",
+      "kind": "calls",
+      "from": "component:src/todos/service.ts",
+      "to": "component:src/todos/repository.ts",
+      "evidenceIds": ["evidence:call:4a9490796dea194e"],
+      "confidence": "observed"
+    },
+    {
+      "id": "calls:test:src/auth/session.test.ts->component:src/auth/session.ts",
+      "kind": "calls",
+      "from": "test:src/auth/session.test.ts",
+      "to": "component:src/auth/session.ts",
+      "evidenceIds": ["evidence:call:53a335ae99d4910f"],
+      "confidence": "observed"
+    },
+    {
+      "id": "calls:test:src/notifications/service.test.ts->component:src/notifications/service.ts",
+      "kind": "calls",
+      "from": "test:src/notifications/service.test.ts",
+      "to": "component:src/notifications/service.ts",
+      "evidenceIds": ["evidence:call:639df5236797dd70"],
+      "confidence": "observed"
+    },
+    {
+      "id": "calls:test:src/todos/service.test.ts->component:src/todos/service.ts",
+      "kind": "calls",
+      "from": "test:src/todos/service.test.ts",
+      "to": "component:src/todos/service.ts",
+      "evidenceIds": ["evidence:call:74b32b0088949402"],
+      "confidence": "observed"
+    },
+    {
+      "id": "exposes:component:src/app/api/auth/route.ts->route:src/app/api/auth/route.ts:GET:/api/auth",
+      "kind": "exposes",
+      "from": "component:src/app/api/auth/route.ts",
+      "to": "route:src/app/api/auth/route.ts:GET:/api/auth",
+      "evidenceIds": ["evidence:route:a0140e1ac42ea000"],
+      "confidence": "observed"
+    },
+    {
+      "id": "exposes:component:src/app/api/todos/route.ts->route:src/app/api/todos/route.ts:POST:/api/todos",
+      "kind": "exposes",
+      "from": "component:src/app/api/todos/route.ts",
+      "to": "route:src/app/api/todos/route.ts:POST:/api/todos",
+      "evidenceIds": ["evidence:route:774061b148667fba"],
+      "confidence": "observed"
+    },
+    {
+      "id": "implements:capability:auth->component:src/app/api/auth/route.ts",
+      "kind": "implements",
+      "from": "capability:auth",
+      "to": "component:src/app/api/auth/route.ts",
+      "evidenceIds": ["evidence:rule:directory-auth"],
+      "confidence": "inferred"
+    },
+    {
+      "id": "implements:capability:auth->component:src/auth/session.ts",
+      "kind": "implements",
+      "from": "capability:auth",
+      "to": "component:src/auth/session.ts",
+      "evidenceIds": ["evidence:rule:directory-auth"],
+      "confidence": "inferred"
+    },
+    {
+      "id": "implements:capability:auth->route:src/app/api/auth/route.ts:GET:/api/auth",
+      "kind": "implements",
+      "from": "capability:auth",
+      "to": "route:src/app/api/auth/route.ts:GET:/api/auth",
+      "evidenceIds": ["evidence:rule:directory-auth"],
+      "confidence": "inferred"
+    },
+    {
+      "id": "implements:capability:auth->test:src/auth/session.test.ts",
+      "kind": "implements",
+      "from": "capability:auth",
+      "to": "test:src/auth/session.test.ts",
+      "evidenceIds": ["evidence:rule:directory-auth"],
+      "confidence": "inferred"
+    },
+    {
+      "id": "implements:capability:notifications->component:src/notifications/email-adapter.ts",
+      "kind": "implements",
+      "from": "capability:notifications",
+      "to": "component:src/notifications/email-adapter.ts",
+      "evidenceIds": ["evidence:rule:directory-notifications"],
+      "confidence": "inferred"
+    },
+    {
+      "id": "implements:capability:notifications->component:src/notifications/service.ts",
+      "kind": "implements",
+      "from": "capability:notifications",
+      "to": "component:src/notifications/service.ts",
+      "evidenceIds": ["evidence:rule:directory-notifications"],
+      "confidence": "inferred"
+    },
+    {
+      "id": "implements:capability:notifications->test:src/notifications/service.test.ts",
+      "kind": "implements",
+      "from": "capability:notifications",
+      "to": "test:src/notifications/service.test.ts",
+      "evidenceIds": ["evidence:rule:directory-notifications"],
+      "confidence": "inferred"
+    },
+    {
+      "id": "implements:capability:todos->component:src/app/api/todos/route.ts",
+      "kind": "implements",
+      "from": "capability:todos",
+      "to": "component:src/app/api/todos/route.ts",
+      "evidenceIds": ["evidence:rule:directory-todos"],
+      "confidence": "inferred"
+    },
+    {
+      "id": "implements:capability:todos->component:src/todos/repository.ts",
+      "kind": "implements",
+      "from": "capability:todos",
+      "to": "component:src/todos/repository.ts",
+      "evidenceIds": ["evidence:rule:directory-todos"],
+      "confidence": "inferred"
+    },
+    {
+      "id": "implements:capability:todos->component:src/todos/service.ts",
+      "kind": "implements",
+      "from": "capability:todos",
+      "to": "component:src/todos/service.ts",
+      "evidenceIds": ["evidence:rule:directory-todos"],
+      "confidence": "inferred"
+    },
+    {
+      "id": "implements:capability:todos->route:src/app/api/todos/route.ts:POST:/api/todos",
+      "kind": "implements",
+      "from": "capability:todos",
+      "to": "route:src/app/api/todos/route.ts:POST:/api/todos",
+      "evidenceIds": ["evidence:rule:directory-todos"],
+      "confidence": "inferred"
+    },
+    {
+      "id": "implements:capability:todos->test:src/todos/service.test.ts",
+      "kind": "implements",
+      "from": "capability:todos",
+      "to": "test:src/todos/service.test.ts",
+      "evidenceIds": ["evidence:rule:directory-todos"],
+      "confidence": "inferred"
+    },
+    {
+      "id": "imports:component:src/app/api/auth/route.ts->component:src/auth/session.ts",
+      "kind": "imports",
+      "from": "component:src/app/api/auth/route.ts",
+      "to": "component:src/auth/session.ts",
+      "evidenceIds": ["evidence:import:21690c734fbf840e"],
+      "confidence": "observed"
+    },
+    {
+      "id": "imports:component:src/app/api/todos/route.ts->component:src/todos/service.ts",
+      "kind": "imports",
+      "from": "component:src/app/api/todos/route.ts",
+      "to": "component:src/todos/service.ts",
+      "evidenceIds": ["evidence:import:7e9f0fed47a9e3c5"],
+      "confidence": "observed"
+    },
+    {
+      "id": "imports:component:src/notifications/service.ts->component:src/notifications/email-adapter.ts",
+      "kind": "imports",
+      "from": "component:src/notifications/service.ts",
+      "to": "component:src/notifications/email-adapter.ts",
+      "evidenceIds": ["evidence:import:fff5107da295acf6"],
+      "confidence": "observed"
+    },
+    {
+      "id": "imports:component:src/todos/service.ts->component:src/todos/repository.ts",
+      "kind": "imports",
+      "from": "component:src/todos/service.ts",
+      "to": "component:src/todos/repository.ts",
+      "evidenceIds": ["evidence:import:36fbf3d164854802"],
+      "confidence": "observed"
+    },
+    {
+      "id": "imports:test:src/auth/session.test.ts->component:src/auth/session.ts",
+      "kind": "imports",
+      "from": "test:src/auth/session.test.ts",
+      "to": "component:src/auth/session.ts",
+      "evidenceIds": ["evidence:import:f3948498f0e8cb47"],
+      "confidence": "observed"
+    },
+    {
+      "id": "imports:test:src/notifications/service.test.ts->component:src/notifications/service.ts",
+      "kind": "imports",
+      "from": "test:src/notifications/service.test.ts",
+      "to": "component:src/notifications/service.ts",
+      "evidenceIds": ["evidence:import:d6a945e656cb28be"],
+      "confidence": "observed"
+    },
+    {
+      "id": "imports:test:src/todos/service.test.ts->component:src/todos/service.ts",
+      "kind": "imports",
+      "from": "test:src/todos/service.test.ts",
+      "to": "component:src/todos/service.ts",
+      "evidenceIds": ["evidence:import:82c4253d0c93b2c6"],
+      "confidence": "observed"
+    },
+    {
+      "id": "risks:capability:notifications->question:email-delivery",
+      "kind": "risks",
+      "from": "capability:notifications",
+      "to": "question:email-delivery",
+      "evidenceIds": ["evidence:question:7caa7456a157be41"],
+      "confidence": "declared"
+    },
+    {
+      "id": "tested_by:component:src/auth/session.ts->test:src/auth/session.test.ts",
+      "kind": "tested_by",
+      "from": "component:src/auth/session.ts",
+      "to": "test:src/auth/session.test.ts",
+      "evidenceIds": ["evidence:import:f3948498f0e8cb47"],
+      "confidence": "observed"
+    },
+    {
+      "id": "tested_by:component:src/notifications/service.ts->test:src/notifications/service.test.ts",
+      "kind": "tested_by",
+      "from": "component:src/notifications/service.ts",
+      "to": "test:src/notifications/service.test.ts",
+      "evidenceIds": ["evidence:import:d6a945e656cb28be"],
+      "confidence": "observed"
+    },
+    {
+      "id": "tested_by:component:src/todos/service.ts->test:src/todos/service.test.ts",
+      "kind": "tested_by",
+      "from": "component:src/todos/service.ts",
+      "to": "test:src/todos/service.test.ts",
+      "evidenceIds": ["evidence:import:82c4253d0c93b2c6"],
+      "confidence": "observed"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "evidence:call:4a9490796dea194e",
+      "kind": "observed",
+      "sourceType": "symbol",
+      "path": "src/todos/service.ts",
+      "symbol": "saveTodo",
+      "lineStart": 4,
+      "lineEnd": 4,
+      "note": "Calls saveTodo."
+    },
+    {
+      "id": "evidence:call:53a335ae99d4910f",
+      "kind": "observed",
+      "sourceType": "symbol",
+      "path": "src/auth/session.test.ts",
+      "symbol": "loadSession",
+      "lineStart": 3,
+      "lineEnd": 3,
+      "note": "Calls loadSession."
+    },
+    {
+      "id": "evidence:call:5bcc1576f00f864d",
+      "kind": "observed",
+      "sourceType": "symbol",
+      "path": "src/app/api/todos/route.ts",
+      "symbol": "createTodo",
+      "lineStart": 4,
+      "lineEnd": 4,
+      "note": "Calls createTodo."
+    },
+    {
+      "id": "evidence:call:639df5236797dd70",
+      "kind": "observed",
+      "sourceType": "symbol",
+      "path": "src/notifications/service.test.ts",
+      "symbol": "notifyAssignment",
+      "lineStart": 3,
+      "lineEnd": 3,
+      "note": "Calls notifyAssignment."
+    },
+    {
+      "id": "evidence:call:74b32b0088949402",
+      "kind": "observed",
+      "sourceType": "symbol",
+      "path": "src/todos/service.test.ts",
+      "symbol": "createTodo",
+      "lineStart": 3,
+      "lineEnd": 3,
+      "note": "Calls createTodo."
+    },
+    {
+      "id": "evidence:call:96449c45d7d96baa",
+      "kind": "observed",
+      "sourceType": "symbol",
+      "path": "src/app/api/auth/route.ts",
+      "symbol": "loadSession",
+      "lineStart": 4,
+      "lineEnd": 4,
+      "note": "Calls loadSession."
+    },
+    {
+      "id": "evidence:call:99018a220794b156",
+      "kind": "observed",
+      "sourceType": "symbol",
+      "path": "src/notifications/service.ts",
+      "symbol": "sendEmail",
+      "lineStart": 4,
+      "lineEnd": 4,
+      "note": "Calls sendEmail."
+    },
+    {
+      "id": "evidence:file:4a5dcf6c9fd4fb5c",
+      "kind": "observed",
+      "sourceType": "file",
+      "path": "src/auth/session.test.ts"
+    },
+    {
+      "id": "evidence:file:5fe72aeb19c5f3dd",
+      "kind": "observed",
+      "sourceType": "file",
+      "path": "src/notifications/service.ts"
+    },
+    {
+      "id": "evidence:file:88d2807f3ad11793",
+      "kind": "observed",
+      "sourceType": "file",
+      "path": "src/notifications/email-adapter.ts"
+    },
+    {
+      "id": "evidence:file:947e1ee9f63eea17",
+      "kind": "observed",
+      "sourceType": "file",
+      "path": "src/auth/session.ts"
+    },
+    {
+      "id": "evidence:file:95fa8a2c3abcd417",
+      "kind": "observed",
+      "sourceType": "file",
+      "path": "src/todos/service.ts"
+    },
+    {
+      "id": "evidence:file:a6ed2af5e34c912d",
+      "kind": "observed",
+      "sourceType": "file",
+      "path": "src/notifications/service.test.ts"
+    },
+    {
+      "id": "evidence:file:b55ae70455fbe18c",
+      "kind": "observed",
+      "sourceType": "file",
+      "path": "src/app/api/todos/route.ts"
+    },
+    {
+      "id": "evidence:file:cba6e4f0c090a3c8",
+      "kind": "observed",
+      "sourceType": "file",
+      "path": "src/todos/repository.ts"
+    },
+    {
+      "id": "evidence:file:cef9d35d55b26194",
+      "kind": "observed",
+      "sourceType": "file",
+      "path": "src/todos/service.test.ts"
+    },
+    {
+      "id": "evidence:file:fadb2aa7a474998d",
+      "kind": "observed",
+      "sourceType": "file",
+      "path": "src/app/api/auth/route.ts"
+    },
+    {
+      "id": "evidence:file:package-json",
+      "kind": "observed",
+      "sourceType": "file",
+      "path": "package.json",
+      "note": "Project identity and declared dependencies."
+    },
+    {
+      "id": "evidence:import:21690c734fbf840e",
+      "kind": "observed",
+      "sourceType": "symbol",
+      "path": "src/app/api/auth/route.ts",
+      "lineStart": 1,
+      "lineEnd": 1,
+      "note": "Imports ../../../auth/session."
+    },
+    {
+      "id": "evidence:import:36fbf3d164854802",
+      "kind": "observed",
+      "sourceType": "symbol",
+      "path": "src/todos/service.ts",
+      "lineStart": 1,
+      "lineEnd": 1,
+      "note": "Imports ./repository."
+    },
+    {
+      "id": "evidence:import:7e9f0fed47a9e3c5",
+      "kind": "observed",
+      "sourceType": "symbol",
+      "path": "src/app/api/todos/route.ts",
+      "lineStart": 1,
+      "lineEnd": 1,
+      "note": "Imports ../../../todos/service."
+    },
+    {
+      "id": "evidence:import:82c4253d0c93b2c6",
+      "kind": "observed",
+      "sourceType": "symbol",
+      "path": "src/todos/service.test.ts",
+      "lineStart": 1,
+      "lineEnd": 1,
+      "note": "Imports ./service."
+    },
+    {
+      "id": "evidence:import:d6a945e656cb28be",
+      "kind": "observed",
+      "sourceType": "symbol",
+      "path": "src/notifications/service.test.ts",
+      "lineStart": 1,
+      "lineEnd": 1,
+      "note": "Imports ./service."
+    },
+    {
+      "id": "evidence:import:f3948498f0e8cb47",
+      "kind": "observed",
+      "sourceType": "symbol",
+      "path": "src/auth/session.test.ts",
+      "lineStart": 1,
+      "lineEnd": 1,
+      "note": "Imports ./session."
+    },
+    {
+      "id": "evidence:import:fff5107da295acf6",
+      "kind": "observed",
+      "sourceType": "symbol",
+      "path": "src/notifications/service.ts",
+      "lineStart": 1,
+      "lineEnd": 1,
+      "note": "Imports ./email-adapter."
+    },
+    {
+      "id": "evidence:question:7caa7456a157be41",
+      "kind": "declared",
+      "sourceType": "config",
+      "path": ".wdmcd/open-questions.yaml",
+      "note": "Open question maintained by the project team."
+    },
+    {
+      "id": "evidence:route:774061b148667fba",
+      "kind": "observed",
+      "sourceType": "symbol",
+      "path": "src/app/api/todos/route.ts",
+      "symbol": "POST",
+      "lineStart": 3,
+      "lineEnd": 3,
+      "note": "next-app route pattern."
+    },
+    {
+      "id": "evidence:route:a0140e1ac42ea000",
+      "kind": "observed",
+      "sourceType": "symbol",
+      "path": "src/app/api/auth/route.ts",
+      "symbol": "GET",
+      "lineStart": 3,
+      "lineEnd": 3,
+      "note": "next-app route pattern."
+    },
+    {
+      "id": "evidence:rule:directory-auth",
+      "kind": "inferred",
+      "sourceType": "config",
+      "path": ".wdmcd/config.json",
+      "note": "Inferred from the auth source area and its connected routes/tests."
+    },
+    {
+      "id": "evidence:rule:directory-notifications",
+      "kind": "inferred",
+      "sourceType": "config",
+      "path": ".wdmcd/config.json",
+      "note": "Inferred from the notifications source area and its connected routes/tests."
+    },
+    {
+      "id": "evidence:rule:directory-todos",
+      "kind": "inferred",
+      "sourceType": "config",
+      "path": ".wdmcd/config.json",
+      "note": "Inferred from the todos source area and its connected routes/tests."
+    }
+  ],
+  "diagnostics": [],
+  "stats": {
+    "files": 10,
+    "nodes": 17,
+    "edges": 32,
+    "capabilities": 3,
+    "tests": 3
+  }
+}

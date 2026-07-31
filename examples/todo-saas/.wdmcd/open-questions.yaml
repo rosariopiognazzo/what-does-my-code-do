@@ -1,0 +1,6 @@
+questions:
+  - id: question:email-delivery
+    question: Which provider delivers assignment emails in production?
+    capabilityId: capability:notifications
+    evidenceIds: []
+    status: open

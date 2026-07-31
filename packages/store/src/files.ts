@@ -128,6 +128,47 @@ export async function readCapabilities(root: string): Promise<CapabilitiesFile> 
   return CapabilitiesFileSchema.parse(parse(content) as unknown);
 }
 
+export async function writeCapabilities(root: string, input: CapabilitiesFile): Promise<void> {
+  const capabilities = CapabilitiesFileSchema.parse(input);
+  await writeFileAtomic(projectPaths(root).capabilities, stringify(capabilities));
+}
+
+export async function confirmCapability(
+  root: string,
+  snapshot: GraphSnapshot,
+  capabilityId: string,
+): Promise<CapabilitiesFile['capabilities'][number]> {
+  const capability = snapshot.nodes.find(
+    (node) => node.kind === 'capability' && node.id === capabilityId,
+  );
+  if (!capability)
+    throw new WdmcdError('CAPABILITY_NOT_FOUND', `Capability not found: ${capabilityId}.`);
+  const files = await readCapabilities(root);
+  const componentIds = snapshot.edges
+    .filter((edge) => edge.kind === 'implements' && edge.from === capabilityId)
+    .map((edge) => edge.to)
+    .sort();
+  const source = snapshot.evidence.find(
+    (item) =>
+      capability.evidenceIds.includes(item.id) && item.path && !item.path.startsWith('.wdmcd/'),
+  );
+  const confirmed = {
+    id: capability.id,
+    name: capability.name,
+    ...(capability.description ? { description: capability.description } : {}),
+    confidence: 'confirmed' as const,
+    components: componentIds,
+    evidence: source?.path
+      ? [{ path: source.path, note: 'Capability confirmed in the local WDMCD interface.' }]
+      : [{ note: 'Capability confirmed in the local WDMCD interface.' }],
+  };
+  const existingIndex = files.capabilities.findIndex((item) => item.id === capabilityId);
+  if (existingIndex >= 0) files.capabilities[existingIndex] = confirmed;
+  else files.capabilities.push(confirmed);
+  await writeCapabilities(root, files);
+  return confirmed;
+}
+
 export async function readOpenQuestions(root: string): Promise<OpenQuestionsFile> {
   const content = await readFile(projectPaths(root).openQuestions, 'utf8');
   return OpenQuestionsFileSchema.parse(parse(content) as unknown);

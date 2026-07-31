@@ -1,49 +1,36 @@
 import path from 'node:path';
 
 import {
-  analyzeTypescriptProject,
-  buildTechnicalSnapshot,
-  discoverProject,
-} from '@wdmcd/analyzer-ts';
-import {
   buildCapabilityDetail,
   buildOverview,
   errorMessage,
   WDMCD_VERSION,
   WdmcdError,
 } from '@wdmcd/core';
-import {
-  buildImpactReport,
-  createChangeEvent,
-  getChangedFiles,
-  getRepositoryState,
-  parseGitRange,
-  resolveCommit,
-} from '@wdmcd/impact';
+import { loadImpactReport } from '@wdmcd/impact';
 import {
   parseOutputFormat,
   renderCapability,
-  renderInit,
   renderImpact,
+  renderInit,
   renderOverview,
   renderScan,
   renderValidation,
   type OutputFormat,
 } from '@wdmcd/renderers';
-import { applySemanticModel } from '@wdmcd/semantic-rules';
 import {
   initializeProject,
-  GraphDatabase,
-  persistSnapshot,
-  readCapabilities,
   readChangeEvents,
-  readConfig,
   readLatestSnapshot,
   readOpenQuestions,
   validateProject,
 } from '@wdmcd/store';
 import { Command } from 'commander';
+import openBrowser from 'open';
 import pc from 'picocolors';
+
+import { scanProject } from './scan.js';
+import { startLocalServer } from './server.js';
 
 interface CliOptions {
   root: string;
@@ -72,8 +59,7 @@ program
   .description('Create the minimal .wdmcd project files.')
   .action(async () => {
     const { root, format } = options();
-    const result = await initializeProject(root);
-    console.log(renderInit(result, format));
+    console.log(renderInit(await initializeProject(root), format));
   });
 
 program
@@ -81,36 +67,13 @@ program
   .description('Analyze the current TypeScript or JavaScript working tree.')
   .action(async () => {
     const { root, format } = options();
-    const config = await readConfig(root);
-    const [project, repository, previous, capabilities, questions] = await Promise.all([
-      discoverProject(root, config),
-      getRepositoryState(root),
-      readLatestSnapshot(root),
-      readCapabilities(root),
-      readOpenQuestions(root),
-    ]);
-    project.scannedRef = repository.ref;
-    project.commit = repository.commit;
-    const analysis = await analyzeTypescriptProject(root, config);
-    const technicalSnapshot = buildTechnicalSnapshot({
-      analysis,
-      project,
-      ...(previous ? { previous } : {}),
-    });
-    const snapshot = applySemanticModel({
-      snapshot: technicalSnapshot,
-      capabilities,
-      questions,
-      ...(previous ? { previous } : {}),
-    });
-    const changeEvent = createChangeEvent(previous, snapshot);
-    await persistSnapshot(root, snapshot, changeEvent);
+    const { snapshot } = await scanProject(root);
     console.log(
       renderScan(
         {
-          project: project.name,
-          ref: repository.ref,
-          commit: repository.commit,
+          project: snapshot.project.name,
+          ref: snapshot.project.scannedRef ?? 'working-tree',
+          commit: snapshot.project.commit ?? 'uncommitted',
           snapshotId: snapshot.id,
           contentHash: snapshot.contentHash,
           files: snapshot.stats.files,
@@ -158,49 +121,37 @@ program
   .description('Compare two scanned Git refs and explain architectural impact.')
   .action(async (rangeValue: string) => {
     const { root, format } = options();
-    const range = parseGitRange(rangeValue);
-    const [baseCommit, headCommit, files] = await Promise.all([
-      resolveCommit(root, range.base),
-      resolveCommit(root, range.head),
-      getChangedFiles(root, range),
-    ]);
-    const database = GraphDatabase.forProject(root);
-    let baseSnapshot;
-    let headSnapshot;
-    try {
-      baseSnapshot = database.snapshotForRef(range.base, baseCommit);
-      headSnapshot = database.snapshotForRef(range.head, headCommit);
-    } finally {
-      database.close();
-    }
-    const missing = [
-      ...(!baseSnapshot ? [`${range.base} @ ${baseCommit.slice(0, 12)}`] : []),
-      ...(!headSnapshot ? [`${range.head} @ ${headCommit.slice(0, 12)}`] : []),
-    ];
-    if (!baseSnapshot || !headSnapshot) {
-      throw new WdmcdError(
-        'SNAPSHOT_NOT_FOUND',
-        'Impact requires an evidence-backed snapshot for both refs.',
-        [
-          ...missing.map((ref) => `Missing: ${ref}`),
-          'Check out each missing ref and run wdmcd scan once.',
-        ],
-      );
-    }
-    console.log(
-      renderImpact(
-        buildImpactReport({
-          range: range.range,
-          baseRef: range.base,
-          headRef: range.head,
-          base: baseSnapshot,
-          head: headSnapshot,
-          files,
-        }),
-        format,
-      ),
-    );
+    console.log(renderImpact(await loadImpactReport(root, rangeValue), format));
   });
+
+program
+  .command('open')
+  .description('Start the local WDMCD interface.')
+  .option('-p, --port <number>', 'preferred local port', '4317')
+  .option('--no-browser', 'do not open the system browser')
+  .action(async (commandOptions: { port: string; browser: boolean }) => {
+    const { root } = options();
+    await requireSnapshotForOpen(root);
+    const port = Number.parseInt(commandOptions.port, 10);
+    if (!Number.isInteger(port) || port < 1 || port > 65_535) {
+      throw new WdmcdError('INVALID_PORT', `Invalid port: ${commandOptions.port}.`);
+    }
+    const server = await startLocalServer(root, port);
+    console.log(`WDMCD interface: ${server.url}`);
+    if (commandOptions.browser) await openBrowser(server.url);
+    const close = async () => {
+      await server.close();
+      process.exit(0);
+    };
+    process.once('SIGINT', close);
+    process.once('SIGTERM', close);
+  });
+
+async function requireSnapshotForOpen(root: string): Promise<void> {
+  if (!(await readLatestSnapshot(root))) {
+    throw new WdmcdError('SNAPSHOT_NOT_FOUND', 'No snapshot found. Run wdmcd scan first.');
+  }
+}
 
 program
   .command('validate')

@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "build", ".next", "coverage", ".wdmcd/cache"],
+  "entrypoints": [],
+  "semanticEngine": {
+    "mode": "rules"
+  }
+}

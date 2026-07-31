@@ -1,0 +1,12 @@
+{
+  "name": "wdmcd-todo-saas-example",
+  "private": true,
+  "description": "Manage team tasks, sessions, and delivery notifications.",
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0",
+    "vitest": "^4.0.0"
+  }
+}
